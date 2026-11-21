@@ -1,0 +1,1859 @@
+<!DOCTYPE html>
+<html lang="el" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartStay Pro SaaS | Πίνακας Διαχείρισης Καταλυμάτων & Κλειδαριών</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Plus Jakarta Sans & Inter & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+    <!-- 10K Websites Engine & FX Styles -->
+    <link rel="stylesheet" href="engine/fx.css">
+    <link rel="stylesheet" href="engine/pages.css">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Plus Jakarta Sans', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        darkBg: '#111111',
+                        sidebarBg: '#151515',
+                        cardBg: '#1A1A1A',
+                        cardHover: '#222222',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --fx-accent: #10B981;
+            --fx-radius: 24px;
+            --fx-gap: 16px;
+        }
+        body {
+            background-color: #111111;
+            color: #F3F4F6;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+        h1, h2, h3, h4, .font-display {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #141414;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2E2E2E;
+            border-radius: 999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #10B981;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-emerald-500 selection:text-black flex flex-col min-h-screen">
+
+    <!-- Top White-Label Customizer Strip -->
+    <div class="bg-gradient-to-r from-emerald-950 via-zinc-900 to-blue-950 border-b border-emerald-500/20 px-4 py-1.5 text-xs flex flex-wrap items-center justify-between gap-2 z-50">
+        <div class="flex items-center gap-2.5 text-gray-300">
+            <a href="index.html" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-black/60 hover:bg-white/10 border border-white/15 text-xs text-emerald-400 font-semibold transition-all">
+                <i class="fa-solid fa-house"></i>
+                <span class="hidden xs:inline">Δημόσιο Site</span>
+            </a>
+            <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold">SaaS Client Portal</span>
+            <span class="hidden md:inline">White-Label όνομα:</span>
+            <input id="saasBrandInput" type="text" value="SmartStay Pro" maxlength="22"
+                class="bg-black/60 border border-white/15 rounded-lg px-2.5 py-0.5 text-white font-semibold focus:outline-none focus:border-emerald-400 w-36 text-center">
+            
+        </div>
+        <button id="toggleApiConsoleBtn" class="inline-flex items-center gap-1.5 text-xs font-mono text-blue-400 hover:text-blue-300 bg-black/50 border border-blue-500/30 px-2.5 py-0.5 rounded-lg transition-all">
+            <i class="fa-solid fa-terminal"></i>
+            <span>TTLock / Tuya API Logs (<span id="apiLogCount">3</span>)</span>
+        </button>
+    </div>
+
+    <!-- Main App Shell -->
+    <div class="flex flex-1 relative">
+        <!-- Mobile Sidebar Backdrop -->
+        <div id="sidebarBackdrop" class="fixed inset-0 bg-black/70 z-30 hidden lg:hidden"></div>
+
+        <!-- SIDEBAR NAVIGATION -->
+        <aside id="sidebar" class="fixed lg:static inset-y-0 left-0 z-40 w-72 bg-sidebarBg border-r border-white/10 flex flex-col justify-between transform -translate-x-full lg:translate-x-0 transition-transform duration-200 ease-in-out">
+            <div>
+                <!-- Brand Header -->
+                <div class="h-18 px-6 py-5 border-b border-white/10 flex items-center justify-between">
+                    <a href="index.html" class="flex items-center gap-3 group" title="Επιστροφή στην Αρχική Ιστοσελίδα">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-blue-600 flex items-center justify-center text-black font-bold text-lg shadow-lg shadow-emerald-500/20 group-hover:scale-105 transition-transform">
+                            <i class="fa-solid fa-key"></i>
+                        </div>
+                        <div>
+                            <div class="brand-name font-display font-extrabold text-lg text-white leading-tight">SmartStay Pro</div>
+                            <div class="text-[10px] uppercase tracking-widest text-emerald-400 font-bold flex items-center gap-1">
+                                <span>Cloud Manager</span>
+                                <i class="fa-solid fa-arrow-up-right-from-square text-[8px] opacity-70 group-hover:opacity-100"></i>
+                            </div>
+                        </div>
+                    </a>
+                    <button id="closeSidebarBtn" class="lg:hidden text-gray-400 hover:text-white p-1">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
+                </div>
+
+                <!-- Navigation Links -->
+                <nav class="p-4 space-y-1.5">
+                    <button data-view="dashboard" class="nav-btn active w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/25 transition-all">
+                        <i class="fa-solid fa-table-cells-large w-5 text-center"></i>
+                        <span>Επισκόπηση & Καταλύματα</span>
+                    </button>
+                    <button data-view="lockers" class="nav-btn w-full flex items-center justify-between px-4 py-3 rounded-2xl text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-all">
+                        <span class="flex items-center gap-3">
+                            <i class="fa-solid fa-vault w-5 text-center"></i>
+                            <span>Reception Key Lockers</span>
+                        </span>
+                        <span id="navLockersBadge" class="px-2 py-0.5 text-[11px] font-bold rounded-full bg-emerald-500/20 text-emerald-400">18</span>
+                    </button>
+                    <button data-view="bookings" class="nav-btn w-full flex items-center justify-between px-4 py-3 rounded-2xl text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-all">
+                        <span class="flex items-center gap-3">
+                            <i class="fa-solid fa-calendar-check w-5 text-center"></i>
+                            <span>Κρατήσεις & iCal Sync</span>
+                        </span>
+                        <span id="navBookingBadge" class="px-2 py-0.5 text-[11px] font-bold rounded-full bg-blue-500/20 text-blue-400">5</span>
+                    </button>
+                    <button data-view="staff" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-all">
+                        <i class="fa-solid fa-user-shield w-5 text-center"></i>
+                        <span>Προσωπικό & Καθαριότητα</span>
+                    </button>
+                    <button data-view="logs" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-all">
+                        <i class="fa-solid fa-clock-rotate-left w-5 text-center"></i>
+                        <span>Ιστορικό Εισόδων & Ενέργειας</span>
+                    </button>
+                    <button data-view="billing" class="nav-btn w-full flex items-center justify-between px-4 py-3 rounded-2xl text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-all">
+                        <span class="flex items-center gap-3">
+                            <i class="fa-solid fa-credit-card w-5 text-center"></i>
+                            <span>Συνδρομή & Χρεώσεις</span>
+                        </span>
+                        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                    </button>
+                    
+                </nav>
+            </div>
+
+            <!-- Bottom Account & Subscription Card -->
+            <div class="p-4 border-t border-white/10">
+                <div class="p-4 rounded-2xl bg-cardBg border border-white/10 mb-3">
+                    <div class="flex items-center justify-between text-xs mb-1.5">
+                        <span class="text-gray-400 font-medium">Πρόγραμμα Pro</span>
+                        <span class="px-2 py-0.5 rounded-md bg-emerald-500/15 text-emerald-400 font-bold">Ενεργό</span>
+                    </div>
+                    <div id="sidebarPlanSummary" class="text-sm font-bold text-white mb-2">4 / 5 Καταλύματα</div>
+                    <div class="w-full h-1.5 bg-black rounded-full overflow-hidden">
+                        <div id="sidebarPlanBar" class="h-full bg-emerald-500 rounded-full" style="width: 80%"></div>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3 px-2 py-1">
+                    <div class="w-9 h-9 rounded-full bg-blue-600/20 border border-blue-500/30 text-blue-400 font-bold text-sm flex items-center justify-center">
+                        ΝΠ
+                    </div>
+                    <div class="overflow-hidden">
+                        <div class="text-sm font-bold text-white truncate">Νίκος Παπαδόπουλος</div>
+                        <div class="text-xs text-gray-400 truncate">Aegean Stays Management</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN WORKSPACE -->
+        <div class="flex-1 flex flex-col min-w-0">
+            <!-- Top Workspace Header -->
+            <header class="sticky top-0 z-20 bg-[#111111]/90 backdrop-blur-xl border-b border-white/10 px-4 sm:px-8 py-4 flex items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    <button id="openSidebarBtn" class="lg:hidden p-2.5 rounded-xl bg-cardBg border border-white/10 text-gray-200 hover:text-white">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                    <div>
+                        <h1 id="pageTitle" class="text-lg sm:text-2xl font-extrabold text-white">Επισκόπηση & Καταλύματα</h1>
+                        <p id="pageSubtitle" class="text-xs text-gray-400 hidden sm:block">Ζωντανή διαχείριση κλειδαριών TTLock, αυτοματισμών iCal και ρελέ ενέργειας</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2.5">
+                    <button onclick="triggerICalSync()" class="inline-flex items-center gap-2 bg-cardBg hover:bg-cardHover border border-white/15 text-gray-200 text-xs sm:text-sm font-semibold px-3.5 py-2.5 rounded-xl transition-all">
+                        <i id="syncIcon" class="fa-solid fa-rotate text-blue-400"></i>
+                        <span class="hidden sm:inline">Sync iCal</span>
+                    </button>
+                    <button onclick="openModal('addPropertyModal')" class="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-black text-xs sm:text-sm font-extrabold px-4 py-2.5 rounded-xl transition-all shadow-lg shadow-emerald-500/20">
+                        <i class="fa-solid fa-plus"></i>
+                        <span>Νέο Κατάλυμα</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- DYNAMIC CONTENT VIEWS -->
+            <main class="flex-1 p-4 sm:p-8 max-w-7xl w-full mx-auto space-y-8">
+
+                <!-- ==================== VIEW 1: DASHBOARD & PROPERTIES ==================== -->
+                <section id="view-dashboard" class="view-section space-y-8">
+                    <!-- KPI Cards -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4 sm:gap-5" data-fx="spotlight" style="--fx-accent:#10B981">
+                        <div class="bg-cardBg border border-white/10 rounded-3xl p-5">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Ενεργά Καταλύματα</span>
+                                <div class="w-9 h-9 rounded-xl bg-emerald-500/15 text-emerald-400 flex items-center justify-center">
+                                    <i class="fa-solid fa-building"></i>
+                                </div>
+                            </div>
+                            <div id="kpiProperties" class="text-3xl font-extrabold text-white font-display">4</div>
+                            <div class="text-xs text-emerald-400 mt-1.5 flex items-center gap-1">
+                                <i class="fa-solid fa-circle-check"></i> Όλα τα Gateways Online
+                            </div>
+                        </div>
+
+                        <div class="bg-cardBg border border-white/10 rounded-3xl p-5 cursor-pointer hover:border-emerald-500/40 transition-all" onclick="switchView('lockers')">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Reception Lockers</span>
+                                <div class="w-9 h-9 rounded-xl bg-amber-500/15 text-amber-400 flex items-center justify-center">
+                                    <i class="fa-solid fa-vault"></i>
+                                </div>
+                            </div>
+                            <div id="kpiLockersSummary" class="text-3xl font-extrabold text-white font-display">10 / 18</div>
+                            <div class="text-xs text-amber-400 mt-1.5 flex items-center gap-1">
+                                <i class="fa-solid fa-key"></i> 2 Κεντρικά Boxes Εισόδου
+                            </div>
+                        </div>
+
+                        <div class="bg-cardBg border border-white/10 rounded-3xl p-5">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Σημερινές Κινήσεις</span>
+                                <div class="w-9 h-9 rounded-xl bg-blue-500/15 text-blue-400 flex items-center justify-center">
+                                    <i class="fa-solid fa-suitcase-rolling"></i>
+                                </div>
+                            </div>
+                            <div class="text-3xl font-extrabold text-white font-display">2 Check-in</div>
+                            <div class="text-xs text-gray-400 mt-1.5">1 Check-out ολοκληρώθηκε στις 11:00</div>
+                        </div>
+
+                        <div class="bg-cardBg border border-white/10 rounded-3xl p-5">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Ενεργοί Κωδικοί PIN</span>
+                                <div class="w-9 h-9 rounded-xl bg-purple-500/15 text-purple-400 flex items-center justify-center">
+                                    <i class="fa-solid fa-hashtag"></i>
+                                </div>
+                            </div>
+                            <div id="kpiActivePins" class="text-3xl font-extrabold text-white font-display">17</div>
+                            <div class="text-xs text-gray-400 mt-1.5">Κλειδαριές & Θυρίδια Εισόδου</div>
+                        </div>
+
+                        <div class="bg-cardBg border border-white/10 rounded-3xl p-5">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Εξοικονόμηση Μήνα</span>
+                                <div class="w-9 h-9 rounded-xl bg-emerald-500/15 text-emerald-400 flex items-center justify-center">
+                                    <i class="fa-solid fa-bolt"></i>
+                                </div>
+                            </div>
+                            <div class="text-3xl font-extrabold text-emerald-400 font-display">486,00 €</div>
+                            <div class="text-xs text-gray-400 mt-1.5">1.390 kWh εξοικονομήθηκαν αυτόματα</div>
+                        </div>
+                    </div>
+
+                    <!-- Property Cards Grid Header -->
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div>
+                            <h2 class="text-xl font-extrabold text-white">Τα Καταλύματά σας</h2>
+                            <p class="text-xs text-gray-400">Πατήστε ξεκλείδωμα/κλείδωμα για άμεση απομακρυσμένη εντολή μέσω TTLock Cloud API</p>
+                        </div>
+                        <div class="flex items-center gap-2 text-xs">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-cardBg border border-white/10 text-gray-300">
+                                <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Airbnb Sync
+                            </span>
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-cardBg border border-white/10 text-gray-300">
+                                <span class="w-2 h-2 rounded-full bg-blue-400"></span> Booking Sync
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Properties Grid -->
+                    <div id="propertiesGrid" class="grid md:grid-cols-2 gap-6" data-fx="spotlight" style="--fx-accent:#10B981">
+                        <!-- Rendered by JS -->
+                    </div>
+                </section>
+
+                <!-- ==================== VIEW: RECEPTION KEY LOCKERS ==================== -->
+                <section id="view-lockers" class="view-section hidden space-y-6">
+                    <!-- Top Header & Actions -->
+                    <div class="bg-cardBg border border-white/10 rounded-3xl p-6 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                        <div class="space-y-1">
+                            <div class="flex flex-wrap items-center gap-2.5">
+                                <span class="px-2.5 py-0.5 rounded-lg bg-emerald-500/15 text-emerald-400 text-xs font-bold">24/7 Self Check-in Reception</span>
+                                <h3 class="font-extrabold text-white text-lg">Κεντρικά Κουτιά Κλειδιών Εισόδου (Smart Key Lockers)</h3>
+                            </div>
+                            <p class="text-xs text-gray-400">Διαχειριστείτε τα θυρίδια παραλαβής κλειδιών/καρτών στην είσοδο του κτιρίου χωρίς καμία μετατροπή στις πόρτες των δωματίων.</p>
+                        </div>
+
+                        <div class="flex flex-wrap items-center gap-3">
+                            <button onclick="openAssignLockerModal()" class="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-black font-extrabold text-xs sm:text-sm px-5 py-3 rounded-xl transition-all shadow-lg shadow-emerald-500/20">
+                                <i class="fa-solid fa-key"></i>
+                                <span>+ Νέα Ανάθεση Κλειδιού / PIN</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Box Selector Tabs + Stats -->
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div class="flex flex-wrap gap-2.5">
+                            <button id="boxTab-boxA" onclick="selectLockerBox('boxA')" class="px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-bold bg-emerald-500 text-black shadow-lg shadow-emerald-500/20 transition-all flex items-center gap-2">
+                                <i class="fa-solid fa-tablet-screen-button"></i>
+                                <span>Reception Kiosk A — Κεντρική Είσοδος (12 Θυρίδια)</span>
+                            </button>
+                            <button id="boxTab-boxB" onclick="selectLockerBox('boxB')" class="px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-semibold bg-cardBg text-gray-300 border border-white/10 hover:bg-cardHover transition-all flex items-center gap-2">
+                                <i class="fa-solid fa-table-cells"></i>
+                                <span>Modular Keybox Wall B — Πτέρυγα Β (6 Θυρίδια TTLock)</span>
+                            </button>
+                        </div>
+
+                        <div id="lockerBoxMeta" class="text-xs text-gray-400 font-mono bg-cardBg border border-white/10 px-3.5 py-2 rounded-xl">
+                            IP: 192.168.1.44 • Wi-Fi + 4G Failover • RFID Sensor Active
+                        </div>
+                    </div>
+
+                    <!-- Main Split Layout: Locker Slots Grid (8 cols) + Live Entrance Kiosk Simulator (4 cols) -->
+                    <div class="grid lg:grid-cols-12 gap-6 items-start">
+                        <!-- Left: Locker Slots Visual Grid -->
+                        <div class="lg:col-span-8 bg-cardBg border border-white/10 rounded-3xl p-5 sm:p-6">
+                            <div class="flex flex-wrap items-center justify-between gap-3 pb-4 mb-5 border-b border-white/10">
+                                <div>
+                                    <h4 id="activeLockerBoxTitle" class="font-extrabold text-white text-base">Reception Kiosk A — Κεντρική Είσοδος</h4>
+                                    <p id="activeLockerBoxSubtitle" class="text-xs text-gray-400">Touchscreen Kiosk 10" + Ηλεκτρομαγνητικές κλειδαριές & αισθητήρες παρουσίας κλειδιού</p>
+                                </div>
+                                <div class="flex flex-wrap items-center gap-3 text-[11px]">
+                                    <span class="inline-flex items-center gap-1.5 text-emerald-400"><span class="w-2 h-2 rounded-full bg-emerald-400"></span>Κλειδί Μέσα</span>
+                                    <span class="inline-flex items-center gap-1.5 text-amber-400"><span class="w-2 h-2 rounded-full bg-amber-400"></span>Παραλήφθηκε</span>
+                                    <span class="inline-flex items-center gap-1.5 text-gray-400"><span class="w-2 h-2 rounded-full bg-gray-500"></span>Ελεύθερο</span>
+                                </div>
+                            </div>
+
+                            <!-- Slots Grid -->
+                            <div id="lockerSlotsGrid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4" data-fx="spotlight" style="--fx-accent:#10B981">
+                                <!-- Rendered dynamically via JS -->
+                            </div>
+                        </div>
+
+                        <!-- Right: Mini Reception Kiosk Simulator -->
+                        <div class="lg:col-span-4 bg-[#141414] border border-blue-500/30 rounded-3xl p-6 shadow-2xl sticky top-24">
+                            <div class="flex items-center justify-between pb-4 mb-5 border-b border-white/10">
+                                <div class="flex items-center gap-2.5">
+                                    <div class="w-9 h-9 rounded-xl bg-blue-500/15 text-blue-400 flex items-center justify-center">
+                                        <i class="fa-solid fa-display"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-extrabold text-white text-sm">Προσομοίωση Kiosk Εισόδου</h4>
+                                        <p class="text-[11px] text-gray-400">Δοκιμή άφιξης επισκέπτη στη ρεσεψιόν</p>
+                                    </div>
+                                </div>
+                                <span class="px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-400 text-[10px] font-bold">LIVE</span>
+                            </div>
+
+                            <!-- Kiosk Screen Display -->
+                            <div id="kioskScreen" class="bg-black border border-white/15 rounded-2xl p-4 mb-4 text-center transition-all">
+                                <div id="kioskPrompt" class="text-[11px] uppercase tracking-wider text-gray-400 mb-1">Εισάγετε 6-ψήφιο PIN Κράτησης</div>
+                                <div id="kioskPinDisplay" class="font-mono text-2xl sm:text-3xl font-extrabold tracking-[0.25em] text-emerald-400 h-9 flex items-center justify-center">
+                                    _ _ _ _ _ _
+                                </div>
+                                <div id="kioskFeedback" class="text-xs text-gray-400 mt-1.5 min-h-[18px]">Αναμονή πληκτρολόγησης...</div>
+                            </div>
+
+                            <!-- Quick Auto-Fill Active PIN Chips -->
+                            <div class="mb-4">
+                                <div class="text-[11px] text-gray-400 mb-1.5 flex items-center justify-between">
+                                    <span>Γρήγορη δοκιμή με ενεργό PIN:</span>
+                                </div>
+                                <div id="kioskQuickPins" class="flex flex-wrap gap-1.5">
+                                    <!-- Populated by JS -->
+                                </div>
+                            </div>
+
+                            <!-- Numeric Keypad -->
+                            <div class="grid grid-cols-3 gap-2 mb-3">
+                                <button onclick="kioskPress('1')" class="py-3 rounded-xl bg-cardBg hover:bg-cardHover border border-white/10 font-mono font-bold text-base text-white active:scale-95 transition-all">1</button>
+                                <button onclick="kioskPress('2')" class="py-3 rounded-xl bg-cardBg hover:bg-cardHover border border-white/10 font-mono font-bold text-base text-white active:scale-95 transition-all">2</button>
+                                <button onclick="kioskPress('3')" class="py-3 rounded-xl bg-cardBg hover:bg-cardHover border border-white/10 font-mono font-bold text-base text-white active:scale-95 transition-all">3</button>
+                                <button onclick="kioskPress('4')" class="py-3 rounded-xl bg-cardBg hover:bg-cardHover border border-white/10 font-mono font-bold text-base text-white active:scale-95 transition-all">4</button>
+                                <button onclick="kioskPress('5')" class="py-3 rounded-xl bg-cardBg hover:bg-cardHover border border-white/10 font-mono font-bold text-base text-white active:scale-95 transition-all">5</button>
+                                <button onclick="kioskPress('6')" class="py-3 rounded-xl bg-cardBg hover:bg-cardHover border border-white/10 font-mono font-bold text-base text-white active:scale-95 transition-all">6</button>
+                                <button onclick="kioskPress('7')" class="py-3 rounded-xl bg-cardBg hover:bg-cardHover border border-white/10 font-mono font-bold text-base text-white active:scale-95 transition-all">7</button>
+                                <button onclick="kioskPress('8')" class="py-3 rounded-xl bg-cardBg hover:bg-cardHover border border-white/10 font-mono font-bold text-base text-white active:scale-95 transition-all">8</button>
+                                <button onclick="kioskPress('9')" class="py-3 rounded-xl bg-cardBg hover:bg-cardHover border border-white/10 font-mono font-bold text-base text-white active:scale-95 transition-all">9</button>
+                                <button onclick="kioskClear()" class="py-3 rounded-xl bg-red-500/15 hover:bg-red-500/25 border border-red-500/30 font-bold text-xs text-red-400 active:scale-95 transition-all">CLEAR</button>
+                                <button onclick="kioskPress('0')" class="py-3 rounded-xl bg-cardBg hover:bg-cardHover border border-white/10 font-mono font-bold text-base text-white active:scale-95 transition-all">0</button>
+                                <button onclick="kioskSubmit()" class="py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 font-extrabold text-xs text-black active:scale-95 transition-all">ENTER <i class="fa-solid fa-unlock ml-1"></i></button>
+                            </div>
+
+                            <p class="text-[11px] text-gray-500 text-center">
+                                Όταν ο επισκέπτης πατήσει ENTER, το αντίστοιχο πορτάκι ξεκλειδώνει αυτόματα και ενημερώνεται ο αισθητήρας κλειδιού.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ==================== VIEW 2: BOOKINGS & ICAL SYNC ==================== -->
+                <section id="view-bookings" class="view-section hidden space-y-6">
+                    <!-- iCal Feed Status Bar -->
+                    <div class="bg-cardBg border border-white/10 rounded-3xl p-6 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                        <div class="space-y-1">
+                            <div class="flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+                                <h3 class="font-bold text-white text-base">Αυτόματη Μηχανή Συγχρονισμού iCal (Airbnb • Booking • Vrbo)</h3>
+                            </div>
+                            <p id="lastSyncText" class="text-xs text-gray-400">Τελευταίος έλεγχος: Πριν από 2 λεπτά • Επόμενος αυτόματος έλεγχος σε 03:00</p>
+                        </div>
+
+                        <div class="flex flex-wrap items-center gap-3">
+                            <button onclick="triggerICalSync()" class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm px-4 py-2.5 rounded-xl transition-all">
+                                <i class="fa-solid fa-rotate"></i>
+                                <span>Συγχρονισμός Τώρα (Προσομοίωση Νέας Κράτησης)</span>
+                            </button>
+                            <button onclick="openModal('addBookingModal')" class="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-black font-extrabold text-xs sm:text-sm px-4 py-2.5 rounded-xl transition-all">
+                                <i class="fa-solid fa-key"></i>
+                                <span>+ Χειροκίνητο PIN</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Filter Bar -->
+                    <div class="flex flex-wrap items-center justify-between gap-3">
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="filterBookings('ALL')" class="booking-filter-btn active px-4 py-2 rounded-xl text-xs font-bold bg-emerald-500 text-black">Όλες</button>
+                            <button onclick="filterBookings('Airbnb')" class="booking-filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-cardBg text-gray-300 border border-white/10 hover:bg-cardHover">Airbnb</button>
+                            <button onclick="filterBookings('Booking.com')" class="booking-filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-cardBg text-gray-300 border border-white/10 hover:bg-cardHover">Booking.com</button>
+                            <button onclick="filterBookings('Vrbo')" class="booking-filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-cardBg text-gray-300 border border-white/10 hover:bg-cardHover">Vrbo</button>
+                        </div>
+                    </div>
+
+                    <!-- Bookings Table -->
+                    <div class="bg-cardBg border border-white/10 rounded-3xl overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="border-b border-white/10 text-[11px] uppercase tracking-wider text-gray-400 bg-black/30">
+                                        <th class="py-4 px-5">Επισκέπτης</th>
+                                        <th class="py-4 px-5">Κατάλυμα</th>
+                                        <th class="py-4 px-5">Πηγή</th>
+                                        <th class="py-4 px-5">Check-in / Check-out</th>
+                                        <th class="py-4 px-5">Αυτόματο PIN</th>
+                                        <th class="py-4 px-5">Ειδοποίηση</th>
+                                        <th class="py-4 px-5 text-right">Ενέργειες</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="bookingsTableBody" class="divide-y divide-white/5 text-sm">
+                                    <!-- Rendered by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ==================== VIEW 3: STAFF & CLEANERS ==================== -->
+                <section id="view-staff" class="view-section hidden space-y-6">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-cardBg border border-white/10 rounded-3xl p-6">
+                        <div>
+                            <h3 class="text-lg font-extrabold text-white">Κωδικοί Πρόσβασης Προσωπικού & Καθαριότητας</h3>
+                            <p class="text-xs text-gray-400 mt-1">Δημιουργήστε επαναλαμβανόμενους κωδικούς (π.χ. συγκεκριμένες ημέρες/ώρες) με πλήρη καταγραφή εισόδων.</p>
+                        </div>
+                        <button onclick="openModal('addStaffModal')" class="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-black font-extrabold text-sm px-5 py-3 rounded-xl transition-all shrink-0">
+                            <i class="fa-solid fa-user-plus"></i>
+                            <span>+ Νέος Κωδικός Προσωπικού</span>
+                        </button>
+                    </div>
+
+                    <div id="staffGrid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Rendered by JS -->
+                    </div>
+                </section>
+
+                <!-- ==================== VIEW 4: AUDIT LOGS & TELEMETRY ==================== -->
+                <section id="view-logs" class="view-section hidden space-y-6">
+                    <div class="bg-cardBg border border-white/10 rounded-3xl p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div>
+                            <h3 class="text-lg font-extrabold text-white">Ζωντανό Ιστορικό Εισόδων & Ενέργειας</h3>
+                            <p class="text-xs text-gray-400 mt-1">Κάθε άνοιγμα πόρτας, πληκτρολόγηση PIN και αυτόματη διακοπή ρεύματος καταγράφεται με ακρίβεια δευτερολέπτου.</p>
+                        </div>
+                        <select id="logPropertyFilter" onchange="renderAuditLogs()" class="bg-black/60 border border-white/15 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-400">
+                            <option value="ALL">Όλα τα Καταλύματα</option>
+                        </select>
+                    </div>
+
+                    <div class="bg-cardBg border border-white/10 rounded-3xl p-6">
+                        <div id="auditLogsList" class="space-y-3">
+                            <!-- Rendered by JS -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ==================== VIEW 5: SAAS SUBSCRIPTION & BILLING ==================== -->
+                <section id="view-billing" class="view-section hidden space-y-6">
+                    <div class="grid lg:grid-cols-12 gap-6">
+                        <!-- Active Plan Summary -->
+                        <div class="lg:col-span-7 bg-cardBg border border-emerald-500/30 rounded-3xl p-6 sm:p-8 flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center justify-between mb-4">
+                                    <span class="px-3 py-1 rounded-full bg-emerald-500/15 text-emerald-400 text-xs font-extrabold uppercase">Ενεργή Συνδρομή SaaS</span>
+                                    <span class="text-xs text-gray-400">Κωδικός Πελάτη: #CUST-8841</span>
+                                </div>
+                                <h3 class="text-2xl sm:text-3xl font-extrabold text-white mb-2">Πρόγραμμα Pro — Multi-Property</h3>
+                                <p class="text-sm text-gray-400 mb-6">Περιλαμβάνει απεριόριστα αυτόματα PIN iCal, αποστολή SMS/WhatsApp, απομακρυσμένο ξεκλείδωμα και αυτοματισμούς ρεύματος/A/C.</p>
+
+                                <div class="grid sm:grid-cols-3 gap-4 p-4 rounded-2xl bg-black/50 border border-white/10 mb-6">
+                                    <div>
+                                        <div class="text-xs text-gray-400">Ενεργά Καταλύματα</div>
+                                        <div id="billingPropCount" class="text-xl font-extrabold text-white mt-0.5">4 Καταλύματα</div>
+                                    </div>
+                                    <div>
+                                        <div class="text-xs text-gray-400">Τιμή / Κατάλυμα</div>
+                                        <div class="text-xl font-extrabold text-emerald-400 mt-0.5">18,00 € / μήνα</div>
+                                    </div>
+                                    <div>
+                                        <div class="text-xs text-gray-400">Σύνολο Μήνα</div>
+                                        <div id="billingTotalMonthly" class="text-xl font-extrabold text-white mt-0.5">72,00 € + ΦΠΑ</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-white/10">
+                                <div class="text-xs text-gray-400">
+                                    Επόμενη αυτόματη χρέωση: <strong class="text-white">01 Δεκεμβρίου 2026</strong>
+                                </div>
+                                <button onclick="showToast('Ανοίχθηκε η πύλη αναβάθμισης θέσεων καταλυμάτων (Stripe Billing Portal).', 'info')" class="bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-xs sm:text-sm px-5 py-2.5 rounded-xl transition-all">
+                                    + Προσθήκη Θέσεων (Slots)
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Payment Method Card -->
+                        <div class="lg:col-span-5 bg-cardBg border border-white/10 rounded-3xl p-6 sm:p-8 flex flex-col justify-between">
+                            <div>
+                                <h4 class="text-lg font-bold text-white mb-4">Τρόπος Πληρωμής</h4>
+                                <div class="p-5 rounded-2xl bg-gradient-to-br from-zinc-800 to-zinc-900 border border-white/15 mb-4">
+                                    <div class="flex items-center justify-between mb-6">
+                                        <i class="fa-brands fa-cc-visa text-3xl text-blue-400"></i>
+                                        <span class="px-2.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 text-[11px] font-bold">Προεπιλογή</span>
+                                    </div>
+                                    <div class="font-mono text-base tracking-widest text-white mb-2">•••• •••• •••• 4912</div>
+                                    <div class="flex justify-between text-xs text-gray-400">
+                                        <span>AEGEAN STAYS IKE</span>
+                                        <span>Λήξη: 09/29</span>
+                                    </div>
+                                </div>
+                                <p class="text-xs text-gray-400">Οι πληρωμές εκτελούνται με ασφάλεια μέσω Stripe / Viva Payments και εκδίδεται αυτόματα τιμολόγιο παροχής υπηρεσιών.</p>
+                            </div>
+
+                            <button onclick="showToast('Η κάρτα ενημερώθηκε επιτυχώς!', 'success')" class="mt-6 w-full py-3 rounded-xl bg-white/10 hover:bg-white/15 text-white font-semibold text-xs transition-all">
+                                Αλλαγή Κάρτας / Στοιχείων Τιμολόγησης
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Invoice History Table -->
+                    <div class="bg-cardBg border border-white/10 rounded-3xl overflow-hidden">
+                        <div class="px-6 py-4 border-b border-white/10">
+                            <h4 class="font-bold text-white text-base">Ιστορικό Τιμολογίων Συνδρομής</h4>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse text-sm">
+                                <thead>
+                                    <tr class="border-b border-white/10 text-[11px] uppercase tracking-wider text-gray-400 bg-black/30">
+                                        <th class="py-3.5 px-6">Αρ. Παραστατικού</th>
+                                        <th class="py-3.5 px-6">Ημερομηνία</th>
+                                        <th class="py-3.5 px-6">Περιγραφή</th>
+                                        <th class="py-3.5 px-6">Ποσό (με ΦΠΑ)</th>
+                                        <th class="py-3.5 px-6">Κατάσταση</th>
+                                        <th class="py-3.5 px-6 text-right">PDF</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-white/5">
+                                    <tr>
+                                        <td class="py-3.5 px-6 font-mono text-xs text-gray-300">INV-2026-1104</td>
+                                        <td class="py-3.5 px-6 text-gray-300">01/11/2026</td>
+                                        <td class="py-3.5 px-6 text-white font-medium">Πρόγραμμα Pro (4 Καταλύματα)</td>
+                                        <td class="py-3.5 px-6 font-bold text-white">89,28 €</td>
+                                        <td class="py-3.5 px-6"><span class="px-2.5 py-1 rounded-lg bg-emerald-500/15 text-emerald-400 text-xs font-bold">Εξοφλήθη</span></td>
+                                        <td class="py-3.5 px-6 text-right"><button onclick="showToast('Λήψη τιμολογίου INV-2026-1104.pdf...', 'info')" class="text-blue-400 hover:underline text-xs font-semibold"><i class="fa-solid fa-file-arrow-down mr-1"></i>Λήψη</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-3.5 px-6 font-mono text-xs text-gray-300">INV-2026-1004</td>
+                                        <td class="py-3.5 px-6 text-gray-300">01/10/2026</td>
+                                        <td class="py-3.5 px-6 text-white font-medium">Πρόγραμμα Pro (4 Καταλύματα)</td>
+                                        <td class="py-3.5 px-6 font-bold text-white">89,28 €</td>
+                                        <td class="py-3.5 px-6"><span class="px-2.5 py-1 rounded-lg bg-emerald-500/15 text-emerald-400 text-xs font-bold">Εξοφλήθη</span></td>
+                                        <td class="py-3.5 px-6 text-right"><button onclick="showToast('Λήψη τιμολογίου INV-2026-1004.pdf...', 'info')" class="text-blue-400 hover:underline text-xs font-semibold"><i class="fa-solid fa-file-arrow-down mr-1"></i>Λήψη</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-3.5 px-6 font-mono text-xs text-gray-300">INV-2026-0903</td>
+                                        <td class="py-3.5 px-6 text-gray-300">01/09/2026</td>
+                                        <td class="py-3.5 px-6 text-white font-medium">Πρόγραμμα Pro (3 Καταλύματα)</td>
+                                        <td class="py-3.5 px-6 font-bold text-white">66,96 €</td>
+                                        <td class="py-3.5 px-6"><span class="px-2.5 py-1 rounded-lg bg-emerald-500/15 text-emerald-400 text-xs font-bold">Εξοφλήθη</span></td>
+                                        <td class="py-3.5 px-6 text-right"><button onclick="showToast('Λήψη τιμολογίου INV-2026-0903.pdf...', 'info')" class="text-blue-400 hover:underline text-xs font-semibold"><i class="fa-solid fa-file-arrow-down mr-1"></i>Λήψη</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+            
+                
+
+            </main>
+        </div>
+    </div>
+
+    <!-- LIVE DEVELOPER API CONSOLE DRAWER (Shows TTLock & Tuya Cloud API calls behind the scenes) -->
+    <div id="apiConsoleDrawer" class="fixed bottom-4 right-4 z-50 w-[92vw] max-w-lg bg-[#0C0C0C] border border-blue-500/40 rounded-2xl shadow-2xl hidden overflow-hidden">
+        <div class="px-4 py-2.5 bg-zinc-900 border-b border-white/10 flex items-center justify-between">
+            <div class="flex items-center gap-2 text-xs font-mono text-blue-400 font-bold">
+                <i class="fa-solid fa-code"></i>
+                <span>Backend API Bridge (TTLock & Tuya Cloud)</span>
+            </div>
+            <button id="closeApiConsoleBtn" class="text-gray-400 hover:text-white text-sm px-1">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div id="apiConsoleOutput" class="p-3.5 font-mono text-[11px] text-emerald-400 h-48 overflow-y-auto space-y-2">
+            <div class="text-gray-400">// Κάθε ενέργεια στο UI καλεί το αντίστοιχο REST API των συσκευών:</div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION CONTAINER -->
+    <div id="toastContainer" class="fixed top-16 right-4 z-50 space-y-2.5 max-w-sm w-full pointer-events-none"></div>
+
+    <!-- ==================== MODALS ==================== -->
+
+    <!-- Modal 1: Add New Property -->
+    <div id="addPropertyModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="bg-cardBg border border-white/15 rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl">
+            <div class="flex items-center justify-between mb-5">
+                <h3 class="text-xl font-extrabold text-white">Προσθήκη Νέου Καταλύματος</h3>
+                <button onclick="closeModal('addPropertyModal')" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form id="addPropertyForm" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1.5">Όνομα Καταλύματος *</label>
+                    <input id="newPropName" type="text" required placeholder="π.χ. Penthouse Θέα Θάλασσα #505"
+                        class="w-full bg-black/60 border border-white/15 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-400">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1.5">Περιοχή / Διεύθυνση *</label>
+                    <input id="newPropLocation" type="text" required placeholder="π.χ. Παραλία Κατερίνης"
+                        class="w-full bg-black/60 border border-white/15 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-400">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-300 mb-1.5">TTLock Device ID *</label>
+                        <input id="newPropLockId" type="text" required value="TTL-90842"
+                            class="w-full bg-black/60 border border-white/15 rounded-xl px-3.5 py-2.5 text-sm font-mono text-emerald-400 focus:outline-none focus:border-emerald-400">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-300 mb-1.5">Πηγή iCal</label>
+                        <select id="newPropSource" class="w-full bg-black/60 border border-white/15 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-400">
+                            <option value="Airbnb">Airbnb</option>
+                            <option value="Booking.com">Booking.com</option>
+                            <option value="Vrbo">Vrbo</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1.5">Σύνδεσμος Ημερολογίου (iCal .ics URL)</label>
+                    <input type="url" placeholder="https://www.airbnb.gr/calendar/ical/..."
+                        class="w-full bg-black/60 border border-white/15 rounded-xl px-3.5 py-2.5 text-xs text-gray-300 focus:outline-none focus:border-emerald-400">
+                </div>
+                <div class="pt-2 flex gap-3">
+                    <button type="button" onclick="closeModal('addPropertyModal')" class="w-1/2 py-3 rounded-xl bg-white/10 text-gray-300 font-semibold text-sm">Ακύρωση</button>
+                    <button type="submit" class="w-1/2 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-extrabold text-sm">Αποθήκευση</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal 2: Add Manual Booking / Custom PIN -->
+    <div id="addBookingModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="bg-cardBg border border-white/15 rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl">
+            <div class="flex items-center justify-between mb-5">
+                <h3 class="text-xl font-extrabold text-white">Δημιουργία Χειροκίνητου PIN</h3>
+                <button onclick="closeModal('addBookingModal')" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form id="addBookingForm" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1.5">Ονοματεπώνυμο Επισκέπτη *</label>
+                    <input id="manualGuestName" type="text" required placeholder="π.χ. Κωνσταντίνος Αλεξίου"
+                        class="w-full bg-black/60 border border-white/15 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-400">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1.5">Επιλογή Καταλύματος *</label>
+                    <select id="manualBookingProp" class="w-full bg-black/60 border border-white/15 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-400">
+                        <!-- Populated dynamically -->
+                    </select>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-300 mb-1.5">Check-in</label>
+                        <input id="manualCheckIn" type="text" value="22/11 15:00" required
+                            class="w-full bg-black/60 border border-white/15 rounded-xl px-3.5 py-2.5 text-sm text-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-300 mb-1.5">Check-out</label>
+                        <input id="manualCheckOut" type="text" value="25/11 11:00" required
+                            class="w-full bg-black/60 border border-white/15 rounded-xl px-3.5 py-2.5 text-sm text-white">
+                    </div>
+                </div>
+                <div class="pt-2 flex gap-3">
+                    <button type="button" onclick="closeModal('addBookingModal')" class="w-1/2 py-3 rounded-xl bg-white/10 text-gray-300 font-semibold text-sm">Ακύρωση</button>
+                    <button type="submit" class="w-1/2 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-extrabold text-sm">Παραγωγή PIN</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal 3: Add Staff Access Code -->
+    <div id="addStaffModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="bg-cardBg border border-white/15 rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl">
+            <div class="flex items-center justify-between mb-5">
+                <h3 class="text-xl font-extrabold text-white">Νέος Κωδικός Προσωπικού</h3>
+                <button onclick="closeModal('addStaffModal')" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form id="addStaffForm" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1.5">Όνομα & Ρόλος *</label>
+                    <input id="staffNameInput" type="text" required placeholder="π.χ. Ελένη Μ. - Καθαριότητα"
+                        class="w-full bg-black/60 border border-white/15 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-400">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1.5">Επιτρεπόμενο Πρόγραμμα Πρόσβασης</label>
+                    <input id="staffScheduleInput" type="text" required value="Δευτέρα - Σάββατο • 11:00 - 15:00"
+                        class="w-full bg-black/60 border border-white/15 rounded-xl px-3.5 py-2.5 text-sm text-white">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1.5">Πρόσβαση σε Καταλύματα</label>
+                    <input id="staffPropsInput" type="text" required value="Όλα τα Καταλύματα (4)"
+                        class="w-full bg-black/60 border border-white/15 rounded-xl px-3.5 py-2.5 text-sm text-white">
+                </div>
+                <div class="pt-2 flex gap-3">
+                    <button type="button" onclick="closeModal('addStaffModal')" class="w-1/2 py-3 rounded-xl bg-white/10 text-gray-300 font-semibold text-sm">Ακύρωση</button>
+                    <button type="submit" class="w-1/2 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-extrabold text-sm">Δημιουργία</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal 4: Assign Key / PIN to Reception Locker Slot -->
+    <div id="assignLockerModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="bg-cardBg border border-white/15 rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl">
+            <div class="flex items-center justify-between mb-5">
+                <h3 class="text-xl font-extrabold text-white">Ανάθεση Θυριδίου & Κλειδιού</h3>
+                <button onclick="closeModal('assignLockerModal')" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form id="assignLockerForm" class="space-y-4">
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-300 mb-1.5">Κουτί Εισόδου *</label>
+                        <select id="assignBoxSelect" onchange="populateFreeSlotsSelect()" class="w-full bg-black/60 border border-white/15 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-400">
+                            <option value="boxA">Reception Kiosk A</option>
+                            <option value="boxB">Modular Wall B</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-300 mb-1.5">Επιλογή Θυριδίου *</label>
+                        <select id="assignSlotSelect" class="w-full bg-black/60 border border-white/15 rounded-xl px-3 py-2.5 text-sm font-mono text-emerald-400 focus:outline-none focus:border-emerald-400">
+                            <!-- Populated dynamically -->
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1.5">Διαμέρισμα / Δωμάτιο *</label>
+                    <input id="assignRoomInput" type="text" required placeholder="π.χ. Στούντιο Κέντρο #105"
+                        class="w-full bg-black/60 border border-white/15 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-400">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1.5">Όνομα Επισκέπτη ή Προσωπικού *</label>
+                    <input id="assignGuestInput" type="text" required placeholder="π.χ. Anna Lindberg (Airbnb)"
+                        class="w-full bg-black/60 border border-white/15 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-400">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-300 mb-1.5">Πηγή Κράτησης</label>
+                        <select id="assignSourceSelect" class="w-full bg-black/60 border border-white/15 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-400">
+                            <option value="Airbnb">Airbnb</option>
+                            <option value="Booking.com">Booking.com</option>
+                            <option value="Vrbo">Vrbo</option>
+                            <option value="Καθαριότητα">Καθαριότητα</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-300 mb-1.5">Ισχύς PIN</label>
+                        <input id="assignValidityInput" type="text" value="Σήμερα 15:00 → 26/11" required
+                            class="w-full bg-black/60 border border-white/15 rounded-xl px-3.5 py-2.5 text-xs text-white">
+                    </div>
+                </div>
+                <div class="pt-2 flex gap-3">
+                    <button type="button" onclick="closeModal('assignLockerModal')" class="w-1/2 py-3 rounded-xl bg-white/10 text-gray-300 font-semibold text-sm">Ακύρωση</button>
+                    <button type="submit" class="w-1/2 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-extrabold text-sm">Παραγωγή PIN</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ==================== JAVASCRIPT APPLICATION LOGIC ==================== -->
+    <script>
+        // --- INITIAL MOCK STATE ---
+        let lockerBoxes = {
+            boxA: {
+                id: 'boxA',
+                name: 'Reception Kiosk A — Κεντρική Είσοδος',
+                subtitle: 'Touchscreen Kiosk 10" + Ηλεκτρομαγνητικές κλειδαριές & αισθητήρες παρουσίας κλειδιού',
+                meta: 'IP: 192.168.1.44 • Wi-Fi + 4G Failover • RFID Sensor Active',
+                apiType: 'kiosk',
+                slots: [
+                    { slot: '01', room: 'Διαμέρισμα #101', status: 'key_inside', guest: 'Maria Rossi', source: 'Airbnb', pin: '519204', validity: 'Σήμερα 15:00 - 24/11', doorOpen: false },
+                    { slot: '02', room: 'Διαμέρισμα #102', status: 'picked_up', guest: 'Lukas Weber', source: 'Booking.com', pin: '830192', validity: 'Ενεργό έως 23/11', doorOpen: false },
+                    { slot: '03', room: 'Διαμέρισμα #103', status: 'key_inside', guest: 'Sophia Chen', source: 'Airbnb', pin: '642910', validity: 'Σήμερα 16:00 - 26/11', doorOpen: false },
+                    { slot: '04', room: 'Διαμέρισμα #104', status: 'free', guest: '—', source: '—', pin: '------', validity: 'Έτοιμο για ανάθεση', doorOpen: false },
+                    { slot: '05', room: 'Στούντιο #201', status: 'key_inside', guest: 'David Miller', source: 'Vrbo', pin: '294810', validity: 'Αύριο 15:00 - 27/11', doorOpen: false },
+                    { slot: '06', room: 'Στούντιο #202', status: 'picked_up', guest: 'Claire Dubois', source: 'Airbnb', pin: '771039', validity: 'Ενεργό έως 25/11', doorOpen: false },
+                    { slot: '07', room: 'Σουίτα #301', status: 'key_inside', guest: 'Μαρία Κ. (Καθαρισμός)', source: 'Προσωπικό', pin: '112299', validity: 'Καθημερινά 11:00-15:00', doorOpen: false },
+                    { slot: '08', room: 'Σουίτα #302', status: 'free', guest: '—', source: '—', pin: '------', validity: 'Έτοιμο για ανάθεση', doorOpen: false },
+                    { slot: '09', room: 'Loft #401', status: 'free', guest: '—', source: '—', pin: '------', validity: 'Έτοιμο για ανάθεση', doorOpen: false },
+                    { slot: '10', room: 'Loft #402', status: 'key_inside', guest: 'Marco Bellini', source: 'Booking.com', pin: '905128', validity: '23/11 15:00 - 28/11', doorOpen: false },
+                    { slot: '11', room: 'Master Key (Έκτακτο)', status: 'key_inside', guest: 'Γιώργος Τ. (Τεχνικός)', source: 'Προσωπικό', pin: '558800', validity: '24/7 Εφεδρικό', doorOpen: false },
+                    { slot: '12', room: 'Penthouse #501', status: 'free', guest: '—', source: '—', pin: '------', validity: 'Έτοιμο για ανάθεση', doorOpen: false }
+                ]
+            },
+            boxB: {
+                id: 'boxB',
+                name: 'Modular Keybox Wall B — Είσοδος Πτέρυγας',
+                subtitle: '6 Αυτόνομα Μεταλλικά Keyboxes TTLock συνδεδεμένα σε Wi-Fi Gateway G2',
+                meta: 'Gateway: G2-8821 • BLE 5.0 + Wi-Fi • IP65 Αδιάβροχο',
+                apiType: 'ttlock_box',
+                slots: [
+                    { slot: 'B1', room: 'Bungalow #01', status: 'key_inside', guest: 'Hannah Klein', source: 'Airbnb', pin: '348921', validity: 'Σήμερα 15:00 - 25/11', doorOpen: false },
+                    { slot: 'B2', room: 'Bungalow #02', status: 'picked_up', guest: 'Thomas Lindqvist', source: 'Booking.com', pin: '619402', validity: 'Ενεργό έως 24/11', doorOpen: false },
+                    { slot: 'B3', room: 'Bungalow #03', status: 'free', guest: '—', source: '—', pin: '------', validity: 'Έτοιμο για ανάθεση', doorOpen: false },
+                    { slot: 'B4', room: 'Bungalow #04', status: 'key_inside', guest: 'Elena Novak', source: 'Vrbo', pin: '482019', validity: '24/11 15:00 - 29/11', doorOpen: false },
+                    { slot: 'B5', room: 'Bungalow #05', status: 'free', guest: '—', source: '—', pin: '------', validity: 'Έτοιμο για ανάθεση', doorOpen: false },
+                    { slot: 'B6', room: 'Bungalow #06', status: 'free', guest: '—', source: '—', pin: '------', validity: 'Έτοιμο για ανάθεση', doorOpen: false }
+                ]
+            }
+        };
+
+        let activeLockerBoxId = 'boxA';
+        let kioskEnteredPin = '';
+
+        let properties = [
+            {
+                id: 'prop-1',
+                name: 'Στούντιο Κέντρο #101',
+                location: 'Κέντρο, 2ος Όροφος',
+                lockId: 'TTL-40192',
+                locked: true,
+                battery: 92,
+                powerOn: true,
+                guest: 'Maria Rossi (Airbnb)',
+                pin: '482910',
+                checkOut: '24/11 11:00',
+                source: 'Airbnb'
+            },
+            {
+                id: 'prop-2',
+                name: 'Πολυτελές Διαμέρισμα Παραλία #202',
+                location: 'Παραλιακή, 4ος Όροφος',
+                lockId: 'TTL-40198',
+                locked: true,
+                battery: 84,
+                powerOn: true,
+                guest: 'Lukas Weber (Booking)',
+                pin: '739104',
+                checkOut: '23/11 11:00',
+                source: 'Booking.com'
+            },
+            {
+                id: 'prop-3',
+                name: 'Μεζονέτα Παλιά Πόλη #303',
+                location: 'Παλιά Πόλη, Ισόγειο',
+                lockId: 'TTL-40215',
+                locked: true,
+                battery: 22,
+                powerOn: false,
+                guest: 'Κενό (Standby Eco)',
+                pin: '------',
+                checkOut: 'Επόμενο: 22/11',
+                source: 'Vrbo'
+            },
+            {
+                id: 'prop-4',
+                name: 'Διαμέρισμα Ακρόπολη #404',
+                location: 'Κουκάκι, 3ος Όροφος',
+                lockId: 'TTL-40289',
+                locked: false,
+                battery: 96,
+                powerOn: true,
+                guest: 'Sophia Chen (Airbnb)',
+                pin: '915042',
+                checkOut: '26/11 11:00',
+                source: 'Airbnb'
+            }
+        ];
+
+        let bookings = [
+            { id: 'BK-101', guest: 'Maria Rossi', property: 'Στούντιο Κέντρο #101', source: 'Airbnb', dates: '20/11 15:00 → 24/11 11:00', pin: '482910', status: 'Στάλθηκε WhatsApp' },
+            { id: 'BK-102', guest: 'Lukas Weber', property: 'Πολυτελές Διαμέρισμα Παραλία #202', source: 'Booking.com', dates: '19/11 15:00 → 23/11 11:00', pin: '739104', status: 'Στάλθηκε SMS & Email' },
+            { id: 'BK-103', guest: 'Sophia Chen', property: 'Διαμέρισμα Ακρόπολη #404', source: 'Airbnb', dates: '21/11 14:00 → 26/11 11:00', pin: '915042', status: 'Στάλθηκε WhatsApp' },
+            { id: 'BK-104', guest: 'David Miller', property: 'Μεζονέτα Παλιά Πόλη #303', source: 'Vrbo', dates: '22/11 15:00 → 27/11 11:00', pin: '604819', status: 'Προγραμματισμένο' },
+            { id: 'BK-105', guest: 'Elena Novak', property: 'Στούντιο Κέντρο #101', source: 'Booking.com', dates: '24/11 15:00 → 28/11 11:00', pin: '318592', status: 'Προγραμματισμένο' }
+        ];
+
+        let staffMembers = [
+            { id: 'ST-1', name: 'Μαρία Κ. — Υπεύθυνη Καθαριότητας', pin: '112299', schedule: 'Καθημερινά • 11:00 - 15:30', properties: 'Όλα τα Καταλύματα', active: true },
+            { id: 'ST-2', name: 'Γιώργος Τ. — Τεχνικός A/C & Υδραυλικά', pin: '558800', schedule: 'Μόνιμος Κωδικός Έκτακτης Ανάγκης', properties: 'Όλα τα Καταλύματα', active: true },
+            { id: 'ST-3', name: 'Ανδρέας Π. — Συνεργείο Λευκών Ειδών', pin: '774411', schedule: 'Τρίτη & Παρασκευή • 10:00 - 14:00', properties: 'Παραλία #202, Κέντρο #101', active: false }
+        ];
+
+        let auditLogs = [
+            { time: '23:18:04', property: 'Διαμέρισμα Ακρόπολη #404', event: 'Ξεκλείδωμα πόρτας με PIN Επισκέπτη (#915042)', type: 'unlock' },
+            { time: '21:45:12', property: 'Πολυτελές Διαμέρισμα Παραλία #202', event: 'Αισθητήρας μπαλκονόπορτας ανοιχτός >60s -> Αυτόματο σβήσιμο A/C', type: 'energy' },
+            { time: '15:04:39', property: 'Στούντιο Κέντρο #101', event: 'Είσοδος επισκέπτη Maria Rossi (Check-in επιβεβαιώθηκε)', type: 'unlock' },
+            { time: '13:20:10', property: 'Μεζονέτα Παλιά Πόλη #303', event: 'Είσοδος Προσωπικού Καθαριότητας (Μαρία Κ. - PIN #112299)', type: 'staff' },
+            { time: '11:15:00', property: 'Μεζονέτα Παλιά Πόλη #303', event: 'Αυτόματη διακοπή θερμοσίφωνα & A/C μετά το Check-out (Ραγοδιακόπτης)', type: 'energy' }
+        ];
+
+        let currentBookingFilter = 'ALL';
+        let apiCallCounter = 3;
+
+        // --- WHITE-LABEL BRANDING ---
+        const saasBrandInput = document.getElementById('saasBrandInput');
+        saasBrandInput.addEventListener('input', (e) => {
+            const val = e.target.value.trim() || 'SmartStay Pro';
+            document.querySelectorAll('.brand-name').forEach(el => el.textContent = val);
+            document.title = `${val} SaaS | Πίνακας Διαχείρισης`;
+        });
+
+        // --- SIDEBAR & NAVIGATION ---
+        const sidebar = document.getElementById('sidebar');
+        const sidebarBackdrop = document.getElementById('sidebarBackdrop');
+        document.getElementById('openSidebarBtn').addEventListener('click', () => {
+            sidebar.classList.remove('-translate-x-full');
+            sidebarBackdrop.classList.remove('hidden');
+        });
+        function closeMobileSidebar() {
+            sidebar.classList.add('-translate-x-full');
+            sidebarBackdrop.classList.add('hidden');
+        }
+        document.getElementById('closeSidebarBtn').addEventListener('click', closeMobileSidebar);
+        sidebarBackdrop.addEventListener('click', closeMobileSidebar);
+
+        const viewMeta = {
+            dashboard: { title: 'Επισκόπηση & Καταλύματα', sub: 'Ζωντανή διαχείριση κλειδαριών TTLock, αυτοματισμών iCal και ρελέ ενέργειας' },
+            lockers: { title: 'Reception Key Lockers (Κεντρικά Κουτιά Εισόδου)', sub: 'Ψηφιακή ρεσεψιόν 24/7 με αυτόματα θυρίδια PIN, αισθητήρες κλειδιών και Kiosk εισόδου' },
+            bookings: { title: 'Κρατήσεις & iCal Sync', sub: 'Αυτόματος συγχρονισμός Airbnb / Booking / Vrbo και αποστολή κωδικών PIN' },
+            staff: { title: 'Προσωπικό & Καθαριότητα', sub: 'Διαχείριση χρονοπρογραμματισμένων κωδικών πρόσβασης για συνεργεία' },
+            logs: { title: 'Ιστορικό Εισόδων & Ενέργειας', sub: 'Πλήρες Audit Log κλειδαριών, θυριδίων ρεσεψιόν και καταναλώσεων ρεύματος' },
+            billing: { title: 'Συνδρομή & Χρεώσεις SaaS', sub: 'Διαχείριση μηνιαίου πλάνου, θέσεων καταλυμάτων και τιμολογίων' },
+            sql: { title: 'Βάση Δεδομένων SQL & Queries', sub: 'Πλήρης διαχείριση πινάκων SQLite3, ζωντανό Schema και Interactive Query Runner' }
+        };
+
+        function switchView(target) {
+            document.querySelectorAll('.nav-btn').forEach(b => {
+                if (b.dataset.view === target) {
+                    b.classList.add('active', 'bg-emerald-500/15', 'text-emerald-400', 'border', 'border-emerald-500/25', 'font-bold');
+                    b.classList.remove('text-gray-400', 'font-medium');
+                } else {
+                    b.classList.remove('active', 'bg-emerald-500/15', 'text-emerald-400', 'border', 'border-emerald-500/25', 'font-bold');
+                    b.classList.add('text-gray-400', 'font-medium');
+                }
+            });
+
+            document.querySelectorAll('.view-section').forEach(sec => sec.classList.add('hidden'));
+            document.getElementById(`view-${target}`).classList.remove('hidden');
+
+            document.getElementById('pageTitle').textContent = viewMeta[target].title;
+            document.getElementById('pageSubtitle').textContent = viewMeta[target].sub;
+            closeMobileSidebar();
+        }
+
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.addEventListener('click', () => switchView(btn.dataset.view));
+        });
+
+        // --- API CONSOLE DRAWER & TOASTS ---
+        const apiConsoleDrawer = document.getElementById('apiConsoleDrawer');
+        const apiConsoleOutput = document.getElementById('apiConsoleOutput');
+        const apiLogCount = document.getElementById('apiLogCount');
+
+        document.getElementById('toggleApiConsoleBtn').addEventListener('click', () => {
+            apiConsoleDrawer.classList.toggle('hidden');
+        });
+        document.getElementById('closeApiConsoleBtn').addEventListener('click', () => {
+            apiConsoleDrawer.classList.add('hidden');
+        });
+
+        function logApiCall(method, endpoint, payload) {
+            apiCallCounter++;
+            apiLogCount.textContent = apiCallCounter;
+            const time = new Date().toLocaleTimeString('el-GR');
+            const entry = document.createElement('div');
+            entry.className = 'p-2 rounded bg-white/[0.03] border border-white/5';
+            entry.innerHTML = `<span class="text-gray-500">[${time}]</span> <span class="text-blue-400 font-bold">${method}</span> <span class="text-white">${endpoint}</span><div class="text-emerald-400 mt-0.5 break-all">${payload}</div>`;
+            apiConsoleOutput.prepend(entry);
+        }
+
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const colors = {
+                success: 'border-emerald-500/40 bg-zinc-900/95 text-emerald-300',
+                info: 'border-blue-500/40 bg-zinc-900/95 text-blue-300',
+                warning: 'border-amber-500/40 bg-zinc-900/95 text-amber-300'
+            };
+            const icons = {
+                success: 'fa-circle-check text-emerald-400',
+                info: 'fa-circle-info text-blue-400',
+                warning: 'fa-triangle-exclamation text-amber-400'
+            };
+
+            const toast = document.createElement('div');
+            toast.className = `pointer-events-auto border ${colors[type] || colors.success} rounded-2xl p-3.5 shadow-2xl flex items-center gap-3 text-xs font-medium backdrop-blur-md transition-all`;
+            toast.innerHTML = `<i class="fa-solid ${icons[type] || icons.success} text-base shrink-0"></i><span>${message}</span>`;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        // --- RENDER PROPERTIES & KPIs ---
+        function renderProperties() {
+            const grid = document.getElementById('propertiesGrid');
+            const totalProps = properties.length;
+            const planLimit = Math.max(5, totalProps + 1);
+
+            document.getElementById('kpiProperties').textContent = totalProps;
+            document.getElementById('sidebarPlanSummary').textContent = `${totalProps} / ${planLimit} Καταλύματα`;
+            document.getElementById('sidebarPlanBar').style.width = `${Math.min(100, Math.round((totalProps / planLimit) * 100))}%`;
+            document.getElementById('billingPropCount').textContent = `${totalProps} Καταλύματα`;
+            document.getElementById('billingTotalMonthly').textContent = `${(totalProps * 18).toFixed(2).replace('.', ',')} € + ΦΠΑ`;
+
+            grid.innerHTML = properties.map(p => `
+                <div class="bg-cardBg border ${p.locked ? 'border-white/10' : 'border-emerald-500/40'} rounded-3xl p-6 flex flex-col justify-between transition-all">
+                    <div>
+                        <div class="flex items-start justify-between gap-3 mb-4">
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <h3 class="text-lg font-extrabold text-white">${p.name}</h3>
+                                    <span class="px-2 py-0.5 rounded-md bg-white/5 text-gray-400 font-mono text-[11px]">${p.lockId}</span>
+                                </div>
+                                <p class="text-xs text-gray-400 mt-0.5"><i class="fa-solid fa-location-dot text-emerald-400 mr-1"></i>${p.location}</p>
+                            </div>
+                            <span class="px-2.5 py-1 rounded-xl text-xs font-bold ${p.battery < 25 ? 'bg-amber-500/15 text-amber-400' : 'bg-emerald-500/15 text-emerald-400'}">
+                                <i class="fa-solid fa-battery-${p.battery < 25 ? 'quarter' : 'full'} mr-1"></i>${p.battery}%
+                            </span>
+                        </div>
+
+                        <div class="p-4 rounded-2xl bg-black/50 border border-white/5 mb-4 flex items-center justify-between">
+                            <div>
+                                <div class="text-[11px] text-gray-400">Τρέχων Επισκέπτης</div>
+                                <div class="text-sm font-bold text-white mt-0.5">${p.guest}</div>
+                                <div class="text-[11px] text-gray-500 mt-0.5">Check-out: ${p.checkOut}</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-[11px] text-gray-400">Ενεργό PIN</div>
+                                <div class="flex items-center gap-1.5 mt-0.5">
+                                    <span class="font-mono text-lg font-extrabold ${p.pin === '------' ? 'text-gray-600' : 'text-emerald-400'}">${p.pin}</span>
+                                    ${p.pin !== '------' ? `<button onclick="copyPin('${p.pin}')" class="text-gray-400 hover:text-white text-xs p-1"><i class="fa-regular fa-copy"></i></button>` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3 pt-2">
+                        <button onclick="toggleLock('${p.id}')"
+                            class="py-3 px-4 rounded-2xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all ${p.locked
+                                ? 'bg-emerald-500 hover:bg-emerald-400 text-black shadow-lg shadow-emerald-500/20'
+                                : 'bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-300'}">
+                            <i class="fa-solid ${p.locked ? 'fa-unlock' : 'fa-lock'}"></i>
+                            <span>${p.locked ? 'Ξεκλείδωμα' : 'Κλείδωμα'}</span>
+                        </button>
+
+                        <button onclick="togglePower('${p.id}')"
+                            class="py-3 px-4 rounded-2xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 border transition-all ${p.powerOn
+                                ? 'bg-blue-500/15 hover:bg-blue-500/25 border-blue-500/30 text-blue-300'
+                                : 'bg-white/5 hover:bg-white/10 border-white/10 text-gray-400'}">
+                            <i class="fa-solid fa-bolt"></i>
+                            <span>Ρεύμα: ${p.powerOn ? 'ON' : 'OFF'}</span>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            // Sync dropdown options in modals & filters
+            const manualPropSelect = document.getElementById('manualBookingProp');
+            if (manualPropSelect) {
+                manualPropSelect.innerHTML = properties.map(p => `<option value="${p.name}">${p.name}</option>`).join('');
+            }
+
+            const logFilter = document.getElementById('logPropertyFilter');
+            if (logFilter) {
+                logFilter.innerHTML = `<option value="ALL">Όλα τα Καταλύματα & Lockers</option>`
+                    + `<option value="Reception Kiosk A">Reception Kiosk A (Είσοδος)</option>`
+                    + `<option value="Modular Keybox Wall B">Modular Keybox Wall B</option>`
+                    + properties.map(p => `<option value="${p.name}">${p.name}</option>`).join('');
+            }
+        }
+
+        // --- RECEPTION KEY LOCKERS LOGIC ---
+        function selectLockerBox(boxId) {
+            activeLockerBoxId = boxId;
+            const tabA = document.getElementById('boxTab-boxA');
+            const tabB = document.getElementById('boxTab-boxB');
+
+            if (boxId === 'boxA') {
+                tabA.className = 'px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-bold bg-emerald-500 text-black shadow-lg shadow-emerald-500/20 transition-all flex items-center gap-2';
+                tabB.className = 'px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-semibold bg-cardBg text-gray-300 border border-white/10 hover:bg-cardHover transition-all flex items-center gap-2';
+            } else {
+                tabB.className = 'px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-bold bg-emerald-500 text-black shadow-lg shadow-emerald-500/20 transition-all flex items-center gap-2';
+                tabA.className = 'px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-semibold bg-cardBg text-gray-300 border border-white/10 hover:bg-cardHover transition-all flex items-center gap-2';
+            }
+            kioskClear();
+            renderLockers();
+        }
+
+        function renderLockers() {
+            const box = lockerBoxes[activeLockerBoxId];
+            document.getElementById('activeLockerBoxTitle').textContent = box.name;
+            document.getElementById('activeLockerBoxSubtitle').textContent = box.subtitle;
+            document.getElementById('lockerBoxMeta').textContent = box.meta;
+
+            // Update dashboard KPI count
+            const allSlots = [...lockerBoxes.boxA.slots, ...lockerBoxes.boxB.slots];
+            const occupiedCount = allSlots.filter(s => s.status !== 'free').length;
+            const kpiEl = document.getElementById('kpiLockersSummary');
+            if (kpiEl) kpiEl.textContent = `${occupiedCount} / ${allSlots.length}`;
+
+            const grid = document.getElementById('lockerSlotsGrid');
+            grid.innerHTML = box.slots.map(s => {
+                let statusBadge = '';
+                let cardBorder = 'border-white/10';
+                if (s.doorOpen) {
+                    statusBadge = `<span class="px-2 py-0.5 rounded-md bg-blue-500/20 text-blue-300 text-[11px] font-bold animate-pulse"><i class="fa-solid fa-door-open mr-1"></i>Πορτάκι Ανοιχτό!</span>`;
+                    cardBorder = 'border-blue-500 ring-2 ring-blue-500/30';
+                } else if (s.status === 'key_inside') {
+                    statusBadge = `<span class="px-2 py-0.5 rounded-md bg-emerald-500/15 text-emerald-400 text-[11px] font-bold"><i class="fa-solid fa-key mr-1"></i>Κλειδί Μέσα</span>`;
+                    cardBorder = 'border-emerald-500/25';
+                } else if (s.status === 'picked_up') {
+                    statusBadge = `<span class="px-2 py-0.5 rounded-md bg-amber-500/15 text-amber-400 text-[11px] font-bold"><i class="fa-solid fa-user-check mr-1"></i>Παραλήφθηκε</span>`;
+                    cardBorder = 'border-amber-500/25';
+                } else {
+                    statusBadge = `<span class="px-2 py-0.5 rounded-md bg-white/5 text-gray-400 text-[11px] font-semibold">Ελεύθερο</span>`;
+                }
+
+                return `
+                <div class="bg-black/50 border ${cardBorder} rounded-2xl p-4 flex flex-col justify-between transition-all">
+                    <div>
+                        <div class="flex items-center justify-between gap-2 mb-2.5">
+                            <span class="font-mono text-sm font-extrabold text-white bg-white/10 px-2.5 py-0.5 rounded-lg">#${s.slot}</span>
+                            ${statusBadge}
+                        </div>
+
+                        <div class="text-sm font-bold text-white truncate">${s.room}</div>
+                        <div class="text-xs text-gray-400 truncate mt-0.5">${s.guest} ${s.source !== '—' ? `<span class="text-gray-500">(${s.source})</span>` : ''}</div>
+
+                        <div class="mt-3 p-2.5 rounded-xl bg-cardBg border border-white/5 flex items-center justify-between">
+                            <div>
+                                <div class="text-[10px] text-gray-500 uppercase">PIN Θυριδίου</div>
+                                <div class="font-mono text-base font-extrabold ${s.pin === '------' ? 'text-gray-600' : 'text-emerald-400'}">${s.pin}</div>
+                            </div>
+                            ${s.pin !== '------' ? `
+                                <button onclick="copyPin('${s.pin}')" class="p-1.5 rounded-lg bg-white/5 hover:bg-white/15 text-gray-300 text-xs" title="Αντιγραφή PIN">
+                                    <i class="fa-regular fa-copy"></i>
+                                </button>
+                            ` : `
+                                <button onclick="openAssignLockerModal('${box.id}', '${s.slot}')" class="px-2.5 py-1 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-400 text-[11px] font-bold">
+                                    + Ανάθεση
+                                </button>
+                            `}
+                        </div>
+                        <div class="text-[11px] text-gray-500 mt-1.5 truncate"><i class="fa-regular fa-clock mr-1"></i>${s.validity}</div>
+                    </div>
+
+                    <div class="mt-3.5 pt-3 border-t border-white/10 flex items-center gap-2">
+                        <button onclick="remoteOpenLockerSlot('${box.id}', '${s.slot}')"
+                            class="flex-1 py-2 px-3 rounded-xl bg-blue-600/20 hover:bg-blue-600/35 border border-blue-500/30 text-blue-300 font-bold text-xs flex items-center justify-center gap-1.5 transition-all">
+                            <i class="fa-solid fa-unlock"></i>
+                            <span>Άνοιγμα Θυριδίου</span>
+                        </button>
+                        ${s.status !== 'free' ? `
+                            <button onclick="releaseLockerSlot('${box.id}', '${s.slot}')" title="Απελευθέρωση Θυριδίου"
+                                class="py-2 px-2.5 rounded-xl bg-white/5 hover:bg-red-500/20 text-gray-400 hover:text-red-400 text-xs transition-all">
+                                <i class="fa-solid fa-rotate-left"></i>
+                            </button>
+                        ` : ''}
+                    </div>
+                </div>
+                `;
+            }).join('');
+
+            // Render quick test PINs in Mini Kiosk
+            const activePins = box.slots.filter(s => s.pin !== '------').slice(0, 4);
+            const quickPinsEl = document.getElementById('kioskQuickPins');
+            quickPinsEl.innerHTML = activePins.map(s => `
+                <button onclick="kioskQuickFill('${s.pin}')" class="px-2.5 py-1 rounded-lg bg-cardBg hover:bg-emerald-500/20 border border-white/10 hover:border-emerald-500/40 text-[11px] font-mono text-emerald-400 transition-all">
+                    #${s.slot}: ${s.pin}
+                </button>
+            `).join('');
+        }
+
+        function remoteOpenLockerSlot(boxId, slotCode, triggeredBy = 'Admin Remote Open') {
+            const box = lockerBoxes[boxId];
+            const slotObj = box.slots.find(s => s.slot === slotCode);
+            if (!slotObj) return;
+
+            slotObj.doorOpen = true;
+            if (slotObj.status === 'key_inside') {
+                slotObj.status = 'picked_up';
+            }
+
+            const endpoint = box.apiType === 'kiosk'
+                ? 'https://api.smartstay.gr/v1/kiosk/slot/unlock'
+                : 'https://euapi.ttlock.com/v3/keybox/unlock';
+            const boxLogName = boxId === 'boxA' ? 'Reception Kiosk A' : 'Modular Keybox Wall B';
+
+            logApiCall('POST', endpoint, `{"boxId":"${boxId}","slot":"#${slotCode}","room":"${slotObj.room}","by":"${triggeredBy}"} -> 200 OPENED`);
+            addAuditLog(boxLogName, `Άνοιγμα Θυριδίου #${slotCode} (${slotObj.room}) • ${triggeredBy}`, 'unlock');
+            showToast(`Το θυρίδιο #${slotCode} (${slotObj.room}) άνοιξε!`, 'success');
+            renderLockers();
+
+            // Auto-close door visual indicator after 4 seconds
+            setTimeout(() => {
+                slotObj.doorOpen = false;
+                renderLockers();
+            }, 4000);
+        }
+
+        function releaseLockerSlot(boxId, slotCode) {
+            const box = lockerBoxes[boxId];
+            const slotObj = box.slots.find(s => s.slot === slotCode);
+            if (!slotObj) return;
+
+            slotObj.status = 'free';
+            slotObj.guest = '—';
+            slotObj.source = '—';
+            slotObj.pin = '------';
+            slotObj.validity = 'Έτοιμο για ανάθεση';
+            slotObj.doorOpen = false;
+
+            logApiCall('DELETE', 'https://api.smartstay.gr/v1/kiosk/slot/pin', `{"boxId":"${boxId}","slot":"#${slotCode}"} -> PIN_REVOKED`);
+            showToast(`Το θυρίδιο #${slotCode} καθαρίστηκε και είναι έτοιμο για νέα κράτηση.`, 'info');
+            renderLockers();
+        }
+
+        // --- MINI RECEPTION KIOSK KEYPAD LOGIC ---
+        function updateKioskDisplay() {
+            const display = document.getElementById('kioskPinDisplay');
+            if (!kioskEnteredPin) {
+                display.textContent = '_ _ _ _ _ _';
+                return;
+            }
+            const padded = kioskEnteredPin.padEnd(6, '_').split('').join(' ');
+            display.textContent = padded;
+        }
+
+        function kioskPress(digit) {
+            if (kioskEnteredPin.length >= 6) return;
+            kioskEnteredPin += digit;
+            updateKioskDisplay();
+        }
+
+        function kioskClear() {
+            kioskEnteredPin = '';
+            updateKioskDisplay();
+            document.getElementById('kioskFeedback').textContent = 'Αναμονή πληκτρολόγησης...';
+            document.getElementById('kioskFeedback').className = 'text-xs text-gray-400 mt-1.5 min-h-[18px]';
+        }
+
+        function kioskQuickFill(pin) {
+            kioskEnteredPin = pin;
+            updateKioskDisplay();
+            document.getElementById('kioskFeedback').textContent = 'Πατήστε ENTER για άνοιγμα θυριδίου';
+            document.getElementById('kioskFeedback').className = 'text-xs text-blue-400 mt-1.5 min-h-[18px]';
+        }
+
+        function kioskSubmit() {
+            const feedback = document.getElementById('kioskFeedback');
+            if (kioskEnteredPin.length < 6) {
+                feedback.textContent = 'Πληκτρολογήστε 6 ψηφία!';
+                feedback.className = 'text-xs text-amber-400 mt-1.5 min-h-[18px]';
+                return;
+            }
+
+            const box = lockerBoxes[activeLockerBoxId];
+            const matchedSlot = box.slots.find(s => s.pin === kioskEnteredPin);
+
+            if (matchedSlot) {
+                feedback.innerHTML = `<i class="fa-solid fa-circle-check mr-1"></i>Καλώς ήρθατε ${matchedSlot.guest}! Ανοίγει το #${matchedSlot.slot}`;
+                feedback.className = 'text-xs text-emerald-400 font-bold mt-1.5 min-h-[18px]';
+                remoteOpenLockerSlot(activeLockerBoxId, matchedSlot.slot, `Guest Kiosk PIN (${matchedSlot.guest})`);
+                kioskEnteredPin = '';
+                setTimeout(updateKioskDisplay, 2500);
+            } else {
+                feedback.innerHTML = `<i class="fa-solid fa-circle-xmark mr-1"></i>Λάθος ή ληγμένος κωδικός PIN`;
+                feedback.className = 'text-xs text-red-400 font-bold mt-1.5 min-h-[18px]';
+                showToast('Μη έγκυρο PIN στο Kiosk Εισόδου.', 'warning');
+                kioskEnteredPin = '';
+                setTimeout(updateKioskDisplay, 1500);
+            }
+        }
+
+        // --- ASSIGN LOCKER MODAL ---
+        function populateFreeSlotsSelect(preselectedSlot = null) {
+            const boxId = document.getElementById('assignBoxSelect').value;
+            const slotSelect = document.getElementById('assignSlotSelect');
+            const slots = lockerBoxes[boxId].slots;
+
+            slotSelect.innerHTML = slots.map(s => `
+                <option value="${s.slot}" ${preselectedSlot === s.slot ? 'selected' : ''}>
+                    Θυρίδιο #${s.slot} (${s.status === 'free' ? 'Ελεύθερο' : s.room})
+                </option>
+            `).join('');
+        }
+
+        function openAssignLockerModal(boxId = activeLockerBoxId, slotCode = null) {
+            document.getElementById('assignBoxSelect').value = boxId;
+            populateFreeSlotsSelect(slotCode);
+            openModal('assignLockerModal');
+        }
+
+        document.getElementById('assignLockerForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const boxId = document.getElementById('assignBoxSelect').value;
+            const slotCode = document.getElementById('assignSlotSelect').value;
+            const room = document.getElementById('assignRoomInput').value.trim();
+            const guest = document.getElementById('assignGuestInput').value.trim();
+            const source = document.getElementById('assignSourceSelect').value;
+            const validity = document.getElementById('assignValidityInput').value.trim();
+            const newPin = Math.floor(100000 + Math.random() * 900000).toString();
+
+            const box = lockerBoxes[boxId];
+            const slotObj = box.slots.find(s => s.slot === slotCode);
+            if (slotObj) {
+                slotObj.room = room;
+                slotObj.guest = guest;
+                slotObj.source = source;
+                slotObj.pin = newPin;
+                slotObj.validity = validity;
+                slotObj.status = 'key_inside';
+            }
+
+            const boxLogName = boxId === 'boxA' ? 'Reception Kiosk A' : 'Modular Keybox Wall B';
+            logApiCall('POST', 'https://api.smartstay.gr/v1/kiosk/slot/assign', `{"box":"${boxId}","slot":"#${slotCode}","pin":"${newPin}","guest":"${guest}"}`);
+            addAuditLog(boxLogName, `Ανάθεση Θυριδίου #${slotCode} (${room}) στον επισκέπτη ${guest} (PIN #${newPin})`, 'unlock');
+            showToast(`Το θυρίδιο #${slotCode} ανατέθηκε! PIN: #${newPin}`, 'success');
+
+            closeModal('assignLockerModal');
+            e.target.reset();
+            selectLockerBox(boxId);
+        });
+
+        function toggleLock(propId) {
+            const prop = properties.find(p => p.id === propId);
+            if (!prop) return;
+            prop.locked = !prop.locked;
+            const actionText = prop.locked ? 'Κλείδωμα' : 'Απομακρυσμένο Ξεκλείδωμα';
+            const endpoint = prop.locked ? '/v3/lock/lock' : '/v3/lock/unlock';
+
+            logApiCall('POST', `https://euapi.ttlock.com${endpoint}`, `{"lockId":"${prop.lockId}","operator":"Admin"} -> 200 OK`);
+            addAuditLog(prop.name, `${actionText} μέσω Cloud Dashboard (Admin)`, 'unlock');
+            showToast(`${prop.name}: ${actionText} ολοκληρώθηκε!`, prop.locked ? 'info' : 'success');
+            renderProperties();
+        }
+
+        function togglePower(propId) {
+            const prop = properties.find(p => p.id === propId);
+            if (!prop) return;
+            prop.powerOn = !prop.powerOn;
+            const state = prop.powerOn ? 'ON' : 'OFF';
+
+            logApiCall('POST', 'https://openapi.tuyaeu.com/v1.0/iot-03/devices/commands', `{"device":"${prop.lockId}-DIN","switch_1":${prop.powerOn}}`);
+            addAuditLog(prop.name, `Ραγοδιακόπτης Πίνακα & A/C τέθηκε σε ${state} από διαχειριστή`, 'energy');
+            showToast(`${prop.name}: Ρεύμα & Κλιματισμός -> ${state}`, prop.powerOn ? 'success' : 'warning');
+            renderProperties();
+        }
+
+        function copyPin(pin) {
+            const temp = document.createElement('textarea');
+            temp.value = pin;
+            document.body.appendChild(temp);
+            temp.select();
+            document.execCommand('copy');
+            document.body.removeChild(temp);
+            showToast(`Ο κωδικός PIN #${pin} αντιγράφηκε στο πρόχειρο!`, 'info');
+        }
+
+        // --- RENDER BOOKINGS & ICAL SYNC ---
+        function renderBookings() {
+            const tbody = document.getElementById('bookingsTableBody');
+            const filtered = currentBookingFilter === 'ALL'
+                ? bookings
+                : bookings.filter(b => b.source === currentBookingFilter);
+
+            document.getElementById('navBookingBadge').textContent = bookings.length;
+
+            tbody.innerHTML = filtered.map(b => {
+                const badgeStyle = b.source === 'Airbnb'
+                    ? 'bg-rose-500/15 text-rose-400'
+                    : b.source === 'Booking.com'
+                        ? 'bg-blue-500/15 text-blue-400'
+                        : 'bg-amber-500/15 text-amber-400';
+
+                return `
+                <tr class="hover:bg-white/[0.02] transition-colors">
+                    <td class="py-4 px-5 font-bold text-white">${b.guest}</td>
+                    <td class="py-4 px-5 text-gray-300 text-xs sm:text-sm">${b.property}</td>
+                    <td class="py-4 px-5"><span class="px-2.5 py-1 rounded-lg text-xs font-bold ${badgeStyle}">${b.source}</span></td>
+                    <td class="py-4 px-5 text-xs text-gray-300 font-mono">${b.dates}</td>
+                    <td class="py-4 px-5">
+                        <span class="font-mono font-extrabold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded-lg">#${b.pin}</span>
+                    </td>
+                    <td class="py-4 px-5 text-xs text-gray-300">
+                        <i class="fa-solid fa-check-double text-emerald-400 mr-1"></i>${b.status}
+                    </td>
+                    <td class="py-4 px-5 text-right space-x-2">
+                        <button onclick="resendPin('${b.guest}', '${b.pin}')" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-xs font-semibold text-gray-200 transition-all">
+                            <i class="fa-brands fa-whatsapp text-emerald-400 mr-1"></i>Αποστολή
+                        </button>
+                    </td>
+                </tr>
+                `;
+            }).join('');
+        }
+
+        function filterBookings(source) {
+            currentBookingFilter = source;
+            document.querySelectorAll('.booking-filter-btn').forEach(btn => {
+                if (btn.textContent === source || (source === 'ALL' && btn.textContent === 'Όλες')) {
+                    btn.className = 'booking-filter-btn active px-4 py-2 rounded-xl text-xs font-bold bg-emerald-500 text-black';
+                } else {
+                    btn.className = 'booking-filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-cardBg text-gray-300 border border-white/10 hover:bg-cardHover';
+                }
+            });
+            renderBookings();
+        }
+
+        function triggerICalSync() {
+            const syncIcon = document.getElementById('syncIcon');
+            syncIcon.classList.add('animate-spin');
+
+            setTimeout(() => {
+                syncIcon.classList.remove('animate-spin');
+                const sampleGuests = ['Thomas Lindqvist', 'Claire Dubois', 'Marco Bellini', 'Hannah Klein'];
+                const sources = ['Airbnb', 'Booking.com', 'Vrbo'];
+                const randomGuest = sampleGuests[Math.floor(Math.random() * sampleGuests.length)];
+                const randomSource = sources[Math.floor(Math.random() * sources.length)];
+                const randomProp = properties[Math.floor(Math.random() * properties.length)];
+                const newPin = Math.floor(100000 + Math.random() * 900000).toString();
+
+                bookings.unshift({
+                    id: `BK-${Math.floor(200 + Math.random() * 700)}`,
+                    guest: randomGuest,
+                    property: randomProp.name,
+                    source: randomSource,
+                    dates: '28/11 15:00 → 02/12 11:00',
+                    pin: newPin,
+                    status: 'Στάλθηκε WhatsApp & Email'
+                });
+
+                document.getElementById('lastSyncText').textContent = `Τελευταίος έλεγχος: Μόλις τώρα • Βρέθηκε νέα κράτηση (${randomSource})`;
+                logApiCall('POST', 'https://euapi.ttlock.com/v3/keyboardPwd/get', `{"lockId":"${randomProp.lockId}","keyboardPwd":"${newPin}","guest":"${randomGuest}"}`);
+                addAuditLog(randomProp.name, `Νέα κράτηση ${randomSource} (${randomGuest}) -> Παράχθηκε PIN #${newPin}`, 'unlock');
+                showToast(`Συγχρονισμός iCal: Νέα κράτηση (${randomGuest})! Στάλθηκε PIN #${newPin}.`, 'success');
+                renderBookings();
+            }, 650);
+        }
+
+        function resendPin(guest, pin) {
+            logApiCall('POST', 'https://api.twilio.com/2010-04-01/Messages.json', `{"to":"${guest}","body":"Ο κωδικός εισόδου σας είναι #${pin}"}`);
+            showToast(`Ο κωδικός #${pin} στάλθηκε ξανά στον επισκέπτη ${guest} μέσω WhatsApp & SMS.`, 'success');
+        }
+
+        // --- RENDER STAFF ---
+        function renderStaff() {
+            const grid = document.getElementById('staffGrid');
+            grid.innerHTML = staffMembers.map(s => `
+                <div class="bg-cardBg border border-white/10 rounded-3xl p-6 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="px-2.5 py-1 rounded-lg text-xs font-bold ${s.active ? 'bg-emerald-500/15 text-emerald-400' : 'bg-white/5 text-gray-500'}">
+                                ${s.active ? 'Ενεργός Κωδικός' : 'Απενεργοποιημένος'}
+                            </span>
+                            <span class="font-mono text-lg font-extrabold text-white">#${s.pin}</span>
+                        </div>
+                        <h4 class="text-base font-bold text-white mb-2">${s.name}</h4>
+                        <div class="space-y-1.5 text-xs text-gray-400 mb-5">
+                            <div><i class="fa-regular fa-clock text-blue-400 mr-1.5"></i>${s.schedule}</div>
+                            <div><i class="fa-solid fa-building text-emerald-400 mr-1.5"></i>${s.properties}</div>
+                        </div>
+                    </div>
+                    <button onclick="toggleStaffStatus('${s.id}')" class="w-full py-2.5 rounded-xl text-xs font-bold transition-all ${s.active ? 'bg-white/10 hover:bg-white/15 text-gray-200' : 'bg-emerald-500 text-black'}">
+                        ${s.active ? 'Προσωρινή Αναστολή' : 'Ενεργοποίηση Κωδικού'}
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function toggleStaffStatus(id) {
+            const staff = staffMembers.find(s => s.id === id);
+            if (!staff) return;
+            staff.active = !staff.active;
+            logApiCall('POST', 'https://euapi.ttlock.com/v3/keyboardPwd/change', `{"keyboardPwd":"${staff.pin}","active":${staff.active}}`);
+            showToast(`Ο κωδικός για "${staff.name}" ${staff.active ? 'ενεργοποιήθηκε' : 'ανεστάλη'}.`, 'info');
+            renderStaff();
+        }
+
+        // --- RENDER AUDIT LOGS ---
+        function addAuditLog(property, event, type) {
+            const now = new Date().toLocaleTimeString('el-GR');
+            auditLogs.unshift({ time: now, property, event, type });
+            renderAuditLogs();
+        loadAllFromSql();
+        }
+
+        function renderAuditLogs() {
+            const filterVal = document.getElementById('logPropertyFilter').value;
+            const list = document.getElementById('auditLogsList');
+            const filtered = filterVal === 'ALL' ? auditLogs : auditLogs.filter(l => l.property === filterVal);
+
+            list.innerHTML = filtered.map(log => {
+                const iconMap = {
+                    unlock: 'fa-key text-emerald-400 bg-emerald-500/15',
+                    energy: 'fa-bolt text-blue-400 bg-blue-500/15',
+                    staff: 'fa-user-check text-purple-400 bg-purple-500/15'
+                };
+                return `
+                <div class="p-4 rounded-2xl bg-black/40 border border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <div class="flex items-center gap-3.5">
+                        <div class="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${iconMap[log.type] || iconMap.unlock}">
+                            <i class="fa-solid ${iconMap[log.type]?.split(' ')[0] || 'fa-key'}"></i>
+                        </div>
+                        <div>
+                            <div class="text-sm font-semibold text-white">${log.event}</div>
+                            <div class="text-xs text-gray-400">${log.property}</div>
+                        </div>
+                    </div>
+                    <span class="font-mono text-xs text-gray-500 sm:text-right">${log.time}</span>
+                </div>
+                `;
+            }).join('');
+        }
+
+        // --- MODALS HANDLING ---
+        function openModal(id) {
+            const el = document.getElementById(id);
+            el.classList.remove('hidden');
+            el.classList.add('flex');
+        }
+        function closeModal(id) {
+            const el = document.getElementById(id);
+            el.classList.add('hidden');
+            el.classList.remove('flex');
+        }
+
+        // Add Property Form
+        document.getElementById('addPropertyForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('newPropName').value.trim();
+            const location = document.getElementById('newPropLocation').value.trim();
+            const lockId = document.getElementById('newPropLockId').value.trim();
+            const source = document.getElementById('newPropSource').value;
+
+            properties.push({
+                id: `prop-${Date.now()}`,
+                name,
+                location,
+                lockId,
+                locked: true,
+                battery: 100,
+                powerOn: false,
+                guest: 'Κενό (Νέα Εγκατάσταση)',
+                pin: '------',
+                checkOut: 'Συγχρονισμένο',
+                source
+            });
+
+            logApiCall('POST', 'https://euapi.ttlock.com/v3/lock/initialize', `{"lockAlias":"${name}","lockId":"${lockId}"}`);
+            addAuditLog(name, `Προστέθηκε νέο κατάλυμα & συνδέθηκε η κλειδαριά ${lockId}`, 'unlock');
+            showToast(`Το κατάλυμα "${name}" προστέθηκε επιτυχώς!`, 'success');
+            closeModal('addPropertyModal');
+            e.target.reset();
+            renderProperties();
+        });
+
+        // Add Manual Booking Form
+        document.getElementById('addBookingForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const guest = document.getElementById('manualGuestName').value.trim();
+            const property = document.getElementById('manualBookingProp').value;
+            const checkIn = document.getElementById('manualCheckIn').value;
+            const checkOut = document.getElementById('manualCheckOut').value;
+            const pin = Math.floor(100000 + Math.random() * 900000).toString();
+
+            bookings.unshift({
+                id: `BK-${Math.floor(800 + Math.random() * 199)}`,
+                guest,
+                property,
+                source: 'Direct / Manual',
+                dates: `${checkIn} → ${checkOut}`,
+                pin,
+                status: 'Στάλθηκε SMS'
+            });
+
+            logApiCall('POST', 'https://euapi.ttlock.com/v3/keyboardPwd/add', `{"property":"${property}","keyboardPwd":"${pin}"}`);
+            addAuditLog(property, `Δημιουργήθηκε χειροκίνητο PIN #${pin} για ${guest}`, 'unlock');
+            showToast(`Παράχθηκε κωδικός #${pin} για τον επισκέπτη ${guest}!`, 'success');
+            
+            // Auto update property card
+            const targetProp = properties.find(p => p.name === property);
+            if (targetProp) {
+                targetProp.guest = `${guest} (Direct)`;
+                targetProp.pin = pin;
+                targetProp.checkOut = checkOut;
+                renderProperties();
+            }
+
+            closeModal('addBookingModal');
+            e.target.reset();
+            renderBookings();
+        });
+
+        // Add Staff Form
+        document.getElementById('addStaffForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('staffNameInput').value.trim();
+            const schedule = document.getElementById('staffScheduleInput').value.trim();
+            const props = document.getElementById('staffPropsInput').value.trim();
+            const pin = Math.floor(100000 + Math.random() * 900000).toString();
+
+            staffMembers.unshift({
+                id: `ST-${Date.now()}`,
+                name,
+                pin,
+                schedule,
+                properties: props,
+                active: true
+            });
+
+            logApiCall('POST', 'https://euapi.ttlock.com/v3/keyboardPwd/add', `{"type":"RECURRING","staff":"${name}","pin":"${pin}"}`);
+            showToast(`Δημιουργήθηκε κωδικός προσωπικού #${pin} για "${name}".`, 'success');
+            closeModal('addStaffModal');
+            e.target.reset();
+            renderStaff();
+        });
+
+        // --- INITIAL RENDER ---
+        renderProperties();
+        renderLockers();
+        renderBookings();
+        renderStaff();
+        renderAuditLogs();
+
+        // Close modal on backdrop click
+        document.querySelectorAll('.fixed.inset-0').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) closeModal(modal.id);
+            });
+        });
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                ['addPropertyModal', 'addBookingModal', 'addStaffModal', 'assignLockerModal'].forEach(closeModal);
+            }
+        });
+    
+        // ==========================================
+        // SQL DATABASE CLIENT & REST API INTEGRATION
+        // ==========================================
+
+        async function fetchFromApi(endpoint, options = {}) {
+            try {
+                const res = await fetch(endpoint, options);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                return await res.json();
+            } catch (err) {
+                console.warn(`API ${endpoint} unavailable (running in local offline mode): ${err.message}`);
+                return null;
+            }
+        }
+
+        // 1. Load initial data from SQL API (with graceful fallback to in-memory)
+        async function loadAllFromSql() {
+            // Load Properties
+            const apiProps = await fetchFromApi('/api/properties');
+            if (apiProps && Array.isArray(apiProps)) {
+                properties = apiProps;
+                renderProperties();
+            }
+
+            // Load Lockers
+            const apiLockers = await fetchFromApi('/api/lockers');
+            if (apiLockers && apiLockers.boxA && apiLockers.boxB) {
+                lockerBoxes = apiLockers;
+                renderLockers();
+            }
+
+            // Load Bookings
+            const apiBookings = await fetchFromApi('/api/bookings');
+            if (apiBookings && Array.isArray(apiBookings)) {
+                bookings = apiBookings;
+                renderBookings();
+            }
+
+            // Load Staff
+            const apiStaff = await fetchFromApi('/api/staff');
+            if (apiStaff && Array.isArray(apiStaff)) {
+                staffMembers = apiStaff;
+                renderStaff();
+            }
+
+            // Load Audit Logs
+            const apiLogs = await fetchFromApi('/api/logs');
+            if (apiLogs && Array.isArray(apiLogs)) {
+                auditLogs = apiLogs;
+                renderAuditLogs();
+            }
+
+            // Load Quotes
+            loadQuotesTable();
+            loadSqlSchema();
+        }
+
+        // 2. SQL Explorer Queries
+        function setQueryPreset(query) {
+            document.getElementById('sqlInput').value = query;
+            executeSqlQuery();
+        }
+
+        async function executeSqlQuery() {
+            const sql = document.getElementById('sqlInput').value.trim();
+            const metaEl = document.getElementById('queryExecutionMeta');
+            const wrapper = document.getElementById('queryResultsWrapper');
+            const thead = document.getElementById('queryTableHead');
+            const tbody = document.getElementById('queryTableBody');
+
+            metaEl.textContent = 'Εκτέλεση query στη βάση SQL...';
+
+            try {
+                const res = await fetch('/api/sql/query', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sql })
+                });
+                const data = await res.json();
+
+                if (!res.ok || data.error) {
+                    metaEl.innerHTML = `<span class="text-red-400 font-bold"><i class="fa-solid fa-triangle-exclamation mr-1"></i>${data.error || 'Σφάλμα SQL'}</span>`;
+                    wrapper.classList.add('hidden');
+                    return;
+                }
+
+                if (data.type === 'SELECT') {
+                    metaEl.innerHTML = `<span class="text-emerald-400 font-bold"><i class="fa-solid fa-check mr-1"></i>Επεστράφησαν ${data.rowCount} γραμμές σε ${data.durationMs} ms</span>`;
+                    wrapper.classList.remove('hidden');
+
+                    // Headers
+                    thead.innerHTML = '<tr>' + data.columns.map(col => `<th class="py-2.5 px-3.5">${col}</th>`).join('') + '</tr>';
+
+                    // Rows
+                    if (data.rows.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="' + data.columns.length + '" class="py-4 text-center text-gray-500">Κανένα αποτέλεσμα (0 rows)</td></tr>';
+                    } else {
+                        tbody.innerHTML = data.rows.map(row => {
+                            return '<tr class="hover:bg-white/[0.03]">' + data.columns.map(col => {
+                                const val = row[col];
+                                const display = val === null ? '<span class="text-gray-600">NULL</span>' : String(val);
+                                return `<td class="py-2 px-3.5 truncate max-w-xs">${display}</td>`;
+                            }).join('') + '</tr>';
+                        }).join('');
+                    }
+                } else {
+                    metaEl.innerHTML = `<span class="text-blue-400 font-bold"><i class="fa-solid fa-check-double mr-1"></i>Εκτελέστηκε! Επηρεάστηκαν ${data.changes} γραμμές (${data.durationMs} ms)</span>`;
+                    wrapper.classList.add('hidden');
+                    loadAllFromSql();
+                }
+            } catch (err) {
+                metaEl.innerHTML = `<span class="text-amber-400">Offline mode: ${err.message}</span>`;
+            }
+        }
+
+        async function loadSqlSchema() {
+            const grid = document.getElementById('sqlTablesGrid');
+            if (!grid) return;
+            try {
+                const res = await fetch('/api/sql/tables');
+                if (!res.ok) return;
+                const tables = await res.json();
+
+                grid.innerHTML = tables.map(t => `
+                    <div class="p-3.5 rounded-2xl bg-black/50 border border-white/10 cursor-pointer hover:border-emerald-500/40 transition-all"
+                         onclick="setQueryPreset('SELECT * FROM ' + '${t.name}' + ';')">
+                        <div class="flex items-center justify-between text-xs mb-1">
+                            <span class="font-mono font-bold text-emerald-400 truncate">${t.name}</span>
+                            <i class="fa-solid fa-table text-gray-500 text-[10px]"></i>
+                        </div>
+                        <div class="text-xl font-extrabold text-white font-mono">${t.rowCount}</div>
+                        <div class="text-[10px] text-gray-500 mt-0.5">${t.columns.length} στήλες</div>
+                    </div>
+                `).join('');
+            } catch (e) {}
+        }
+
+        async function loadQuotesTable() {
+            const tbody = document.getElementById('quotesTableBody');
+            const badge = document.getElementById('quotesBadge');
+            if (!tbody) return;
+            try {
+                const res = await fetch('/api/quotes');
+                if (!res.ok) return;
+                const quotes = await res.json();
+                if (badge) badge.textContent = `${quotes.length} Leads`;
+
+                tbody.innerHTML = quotes.map(q => `
+                    <tr class="hover:bg-white/[0.02]">
+                        <td class="py-3 px-4 font-mono text-gray-400">#${q.id}</td>
+                        <td class="py-3 px-4 font-bold text-white">${q.full_name}</td>
+                        <td class="py-3 px-4 text-emerald-400 font-mono">${q.phone}</td>
+                        <td class="py-3 px-4 text-gray-300">${q.email}</td>
+                        <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-md bg-emerald-500/15 text-emerald-300 font-medium text-[11px]">${q.package_name}</span></td>
+                        <td class="py-3 px-4 text-gray-400 max-w-xs truncate">${q.notes || '—'}</td>
+                        <td class="py-3 px-4 text-gray-500 font-mono text-[11px]">${new Date(q.created_at).toLocaleDateString('el-GR')}</td>
+                    </tr>
+                `).join('');
+            } catch (e) {}
+        }
+
+    </script>
+    <!-- 10K Websites Engine FX Script -->
+    <script src="engine/fx.js"></script>
+</body>
+</html>

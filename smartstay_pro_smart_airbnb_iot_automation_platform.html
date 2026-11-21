@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="el" class="scroll-smooth dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartStay Pro | Ολοκληρωμένη Αυτοματοποίηση Airbnb & Καταλυμάτων</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+    <!-- 10K Websites Engine & FX Styles -->
+    <link rel="stylesheet" href="engine/scene.css">
+    <link rel="stylesheet" href="engine/fx.css">
+    <link rel="stylesheet" href="engine/pages.css">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        darkBg: '#111111',
+                        cardBg: '#1A1A1A',
+                        cardHover: '#222222',
+                        emeraldGlow: '#10B981',
+                        blueGlow: '#3B82F6',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --fx-accent: #10B981;
+            --fx-radius: 24px;
+            --fx-gap: 20px;
+        }
+        body {
+            background-color: #111111;
+            color: #F3F4F6;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+        h1, h2, h3, h4, .font-display {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .glow-emerald {
+            box-shadow: 0 0 30px -5px rgba(16, 185, 129, 0.25);
+        }
+        .glow-blue {
+            box-shadow: 0 0 30px -5px rgba(59, 130, 246, 0.25);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #10B981 0%, #3B82F6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero-grid {
+            background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+            background-size: 28px 28px;
+        }
+        /* Custom Range Slider */
+        input[type=range] {
+            -webkit-appearance: none;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 22px;
+            width: 22px;
+            border-radius: 50%;
+            background: #10B981;
+            cursor: pointer;
+            margin-top: -8px;
+            box-shadow: 0 0 12px rgba(16, 185, 129, 0.7);
+            border: 2px solid #111111;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 6px;
+            cursor: pointer;
+            background: #2D2D2D;
+            border-radius: 999px;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-emerald-500 selection:text-black">
+
+    <!-- Top White-Label Rebrand Notice Bar (Editable Brand Banner) -->
+    <div class="bg-gradient-to-r from-emerald-950/90 via-zinc-900 to-blue-950/90 border-b border-emerald-500/20 text-xs py-2 px-4 text-center text-gray-300 flex flex-wrap items-center justify-center gap-2">
+        <span class="inline-flex items-center gap-1.5 font-medium text-emerald-400">
+            <i class="fa-solid fa-wand-magic-sparkles"></i> White-Label Ready:
+        </span>
+        <span>Προσαρμόστε το όνομα του brand σας ζωντανά:</span>
+        <input id="brandNameInput" type="text" value="SmartStay Pro" maxlength="22"
+            class="bg-black/60 border border-white/15 rounded-lg px-2.5 py-0.5 text-white font-semibold focus:outline-none focus:border-emerald-400 w-36 text-center"
+            title="Πληκτρολογήστε το όνομα της εταιρείας σας">
+    </div>
+
+    <!-- Navigation Bar -->
+    <header class="sticky top-0 z-50 bg-[#111111]/85 backdrop-blur-xl border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 py-4 flex items-center justify-between">
+            <!-- Brand Logo -->
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-blue-600 flex items-center justify-center text-black font-bold text-lg shadow-lg shadow-emerald-500/20 group-hover:scale-105 transition-transform">
+                    <i class="fa-solid fa-key"></i>
+                </div>
+                <div>
+                    <span class="brand-display font-display font-extrabold text-xl tracking-tight text-white">SmartStay Pro</span>
+                    <span class="block text-[10px] uppercase tracking-widest text-emerald-400 font-semibold">IoT Hospitality</span>
+                </div>
+            </a>
+
+            <!-- Desktop Menu -->
+            <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-300">
+                <a href="#how-it-works" class="hover:text-emerald-400 transition-colors">Πώς Λειτουργεί</a>
+                <a href="#hardware" class="hover:text-emerald-400 transition-colors">Εξοπλισμός IoT</a>
+                <a href="#simulator" class="hover:text-emerald-400 transition-colors flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Live Demo
+                </a>
+                <a href="#roi" class="hover:text-emerald-400 transition-colors">Υπολογιστής ROI</a>
+                <a href="#pricing" class="hover:text-emerald-400 transition-colors">Πακέτα</a>
+            </nav>
+
+            <!-- CTA & Mobile Toggle -->
+            <div class="flex items-center gap-3">
+                <a href="dashboard.html" class="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-black font-extrabold text-xs sm:text-sm px-4 py-2.5 rounded-xl transition-all shadow-lg shadow-emerald-500/25">
+                    <i class="fa-solid fa-gauge-high"></i>
+                    <span>SaaS Portal</span>
+                </a>
+                <a href="#contact" class="hidden lg:inline-flex items-center gap-2 bg-white/10 hover:bg-white/15 text-white font-bold text-sm px-4 py-2.5 rounded-xl transition-all border border-white/10">
+                    <span>Ζητήστε Προσφορά</span>
+                    <i class="fa-solid fa-arrow-right text-xs"></i>
+                </a>
+                <button id="mobileMenuBtn" class="md:hidden p-2.5 rounded-xl bg-cardBg border border-white/10 text-gray-200 hover:text-white" aria-label="Μενού">
+                    <i class="fa-solid fa-bars text-lg"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Dropdown Menu -->
+        <div id="mobileMenu" class="hidden md:hidden bg-cardBg border-b border-white/10 px-4 pt-2 pb-5 space-y-2">
+            <a href="dashboard.html" class="block text-center px-3 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500/20 to-teal-500/20 border border-emerald-500/30 text-emerald-300 font-bold mb-2">
+                <i class="fa-solid fa-gauge-high mr-2"></i>Είσοδος στο SaaS Διαχειριστικό
+            </a>
+            <a href="#how-it-works" class="block px-3 py-2.5 rounded-xl text-gray-200 hover:bg-white/5 font-medium">Πώς Λειτουργεί</a>
+            <a href="#hardware" class="block px-3 py-2.5 rounded-xl text-gray-200 hover:bg-white/5 font-medium">Εξοπλισμός IoT</a>
+            <a href="#simulator" class="block px-3 py-2.5 rounded-xl text-emerald-400 hover:bg-white/5 font-medium">Live Demo Προσομοιωτής</a>
+            <a href="#roi" class="block px-3 py-2.5 rounded-xl text-gray-200 hover:bg-white/5 font-medium">Υπολογιστής ROI</a>
+            <a href="#pricing" class="block px-3 py-2.5 rounded-xl text-gray-200 hover:bg-white/5 font-medium">Πακέτα & Τιμές</a>
+            <a href="#contact" class="block text-center mt-3 bg-emerald-500 text-black font-bold py-3 rounded-xl">Ζητήστε Προσφορά</a>
+        </div>
+    </header>
+
+    <!-- 1. HERO SECTION -->
+    <section class="relative hero-grid pt-14 pb-20 lg:pt-24 lg:pb-28 overflow-hidden">
+        <!-- Ambient Glow Orbs -->
+        <div class="absolute top-10 left-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid lg:grid-cols-12 gap-12 items-center">
+                <!-- Left Copy -->
+                <div class="lg:col-span-7 text-center lg:text-left">
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-emerald-400 text-xs sm:text-sm font-semibold mb-6">
+                        <i class="fa-solid fa-bolt"></i>
+                        <span>All-in-One Smart Hospitality & Energy Automation</span>
+                    </div>
+
+                    <h1 data-fx="split" class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.12] mb-6">
+                        Αυτοματοποιήστε πλήρως το <span class="gradient-text">Airbnb & τα καταλύματά</span> σας.
+                    </h1>
+
+                    <p class="text-lg sm:text-xl text-gray-400 leading-relaxed mb-8 max-w-2xl mx-auto lg:mx-0">
+                        Μηδενική φυσική παρουσία στο check-in, αυτόματη αποστολή κωδικών PIN ανά κράτηση και <strong class="text-white">έως 38% εξοικονόμηση ρεύματος</strong> σε κλιματιστικά και θερμοσίφωνες.
+                    </p>
+
+                    <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 sm:gap-4 mb-10">
+                        <a href="dashboard.html" data-fx="magnet" data-fx-strength="0.3" class="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-black font-extrabold text-base px-6 py-4 rounded-2xl transition-all shadow-xl shadow-emerald-500/25">
+                            <i class="fa-solid fa-gauge-high"></i>
+                            <span>Δοκιμή Διαχειριστικού (Live Demo)</span>
+                        </a>
+                        <a href="#pricing" class="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 bg-white/10 hover:bg-white/15 text-white border border-white/15 font-bold text-base px-6 py-4 rounded-2xl transition-all">
+                            <span>Δείτε τα Πακέτα</span>
+                            <i class="fa-solid fa-layer-group"></i>
+                        </a>
+                        <a href="#roi" class="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 bg-cardBg hover:bg-cardHover text-white border border-white/15 font-semibold text-base px-7 py-4 rounded-2xl transition-all">
+                            <i class="fa-solid fa-calculator text-blue-400"></i>
+                            <span>Υπολογιστής Κέρδους & ROI</span>
+                        </a>
+                    </div>
+
+                    <!-- Trust Metrics -->
+                    <div class="grid grid-cols-3 gap-4 pt-6 border-t border-white/10 max-w-lg mx-auto lg:mx-0">
+                        <div>
+                            <div class="text-2xl sm:text-3xl font-extrabold text-white font-display" data-fx="count" data-fx-to="38" data-fx-prefix="-" data-fx-suffix="%">-38%</div>
+                            <div class="text-xs text-gray-400 mt-0.5">Κόστος Ενέργειας</div>
+                        </div>
+                        <div>
+                            <div class="text-2xl sm:text-3xl font-extrabold text-emerald-400 font-display">24/7</div>
+                            <div class="text-xs text-gray-400 mt-0.5">Αυτόματο Check-in</div>
+                        </div>
+                        <div>
+                            <div class="text-2xl sm:text-3xl font-extrabold text-blue-400 font-display">&lt; 5 μήνες</div>
+                            <div class="text-xs text-gray-400 mt-0.5">Μέση Απόσβεση</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Live Dashboard Card Preview -->
+                <div class="lg:col-span-5" data-fx="tilt">
+                    <div class="fx-tilt-frame bg-cardBg border border-white/10 rounded-3xl p-6 sm:p-7 glow-emerald relative">
+                        <div class="flex items-center justify-between pb-4 mb-5 border-b border-white/10">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-emerald-500/15 text-emerald-400 flex items-center justify-center">
+                                    <i class="fa-solid fa-house-signal text-lg"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-white text-sm sm:text-base">Acropolis Loft #04</h3>
+                                    <p class="text-xs text-emerald-400 flex items-center gap-1.5">
+                                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> Online • Συγχρονισμένο
+                                    </p>
+                                </div>
+                            </div>
+                            <span class="px-3 py-1 rounded-full bg-blue-500/15 text-blue-400 text-xs font-bold">Airbnb Sync</span>
+                        </div>
+
+                        <!-- Status Rows -->
+                        <div class="space-y-3.5 text-sm">
+                            <div class="p-3.5 rounded-2xl bg-black/40 border border-white/5 flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <i class="fa-solid fa-lock text-emerald-400 text-base"></i>
+                                    <div>
+                                        <div class="font-semibold text-white">Έξυπνη Κλειδαριά</div>
+                                        <div class="text-xs text-gray-400">PIN Επισκέπτη: <span class="font-mono text-emerald-400 font-bold">#849210</span></div>
+                                    </div>
+                                </div>
+                                <span class="text-xs font-semibold px-2.5 py-1 rounded-lg bg-emerald-500/15 text-emerald-400">Ενεργό</span>
+                            </div>
+
+                            <div class="p-3.5 rounded-2xl bg-black/40 border border-white/5 flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <i class="fa-solid fa-snowflake text-blue-400 text-base"></i>
+                                    <div>
+                                        <div class="font-semibold text-white">Κλιματισμός & Πίνακας</div>
+                                        <div class="text-xs text-gray-400">Μπαλκονόπορτα Κλειστή • 23°C</div>
+                                    </div>
+                                </div>
+                                <span class="text-xs font-semibold px-2.5 py-1 rounded-lg bg-blue-500/15 text-blue-400">Eco Mode</span>
+                            </div>
+
+                            <div class="p-3.5 rounded-2xl bg-black/40 border border-white/5 flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <i class="fa-solid fa-shield-halved text-purple-400 text-base"></i>
+                                    <div>
+                                        <div class="font-semibold text-white">Θόρυβος & Διαρροή Νερού</div>
+                                        <div class="text-xs text-gray-400">42 dB (Φυσιολογικό) • 0% Υγρασία</div>
+                                    </div>
+                                </div>
+                                <span class="text-xs font-semibold px-2.5 py-1 rounded-lg bg-white/10 text-gray-300">GDPR Safe</span>
+                            </div>
+                        </div>
+
+                        <!-- Bottom Quick Savings Bar -->
+                        <div class="mt-5 pt-4 border-t border-white/10 flex items-center justify-between text-xs">
+                            <span class="text-gray-400">Εξοικονόμηση τρέχοντος μήνα:</span>
+                            <span class="text-emerald-400 font-bold text-sm">+142,50 € (410 kWh)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 10K WEBSITES ENGINE: INFINITE PARTNER & IOT PROTOCOL MARQUEE -->
+    <div class="border-y border-white/10 bg-black/60 py-4 overflow-hidden relative" aria-label="Υποστηριζόμενα κανάλια & πρωτόκολλα">
+        <div data-fx="marquee" data-fx-seconds="32" class="flex items-center gap-10 whitespace-nowrap text-sm font-semibold text-gray-400">
+            <span class="inline-flex items-center gap-2 text-rose-400"><i class="fa-brands fa-airbnb text-xl"></i> Airbnb API Direct</span>
+            <span class="inline-flex items-center gap-2 text-blue-400"><i class="fa-solid fa-hotel text-lg"></i> Booking.com Connectivity</span>
+            <span class="inline-flex items-center gap-2 text-emerald-400"><i class="fa-solid fa-key text-lg"></i> TTLock OpenAPI Cloud</span>
+            <span class="inline-flex items-center gap-2 text-orange-400"><i class="fa-solid fa-bolt text-lg"></i> Tuya Smart DIN Breakers</span>
+            <span class="inline-flex items-center gap-2 text-amber-400"><i class="fa-solid fa-house-signal text-lg"></i> Vrbo Calendar Sync</span>
+            <span class="inline-flex items-center gap-2 text-purple-400"><i class="fa-brands fa-stripe text-2xl"></i> Stripe Automated SaaS</span>
+            <span class="inline-flex items-center gap-2 text-green-400"><i class="fa-brands fa-whatsapp text-xl"></i> Twilio WhatsApp / SMS PINs</span>
+            <span class="inline-flex items-center gap-2 text-teal-400"><i class="fa-solid fa-satellite-dish text-lg"></i> Zigbee 3.0 & BLE 5.0 Gateways</span>
+            
+        </div>
+    </div>
+
+    <!-- 2. HOW IT WORKS (3-STEP AUTOMATION FLOW) -->
+    <section id="how-it-works" class="py-20 bg-[#141414] border-y border-white/5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-emerald-400 font-bold text-xs uppercase tracking-widest">Αυτοματισμός Χωρίς Παρέμβαση</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-2 mb-4">Πώς Λειτουργεί σε 3 Απλά Βήματα</h2>
+                <p class="text-gray-400 text-base sm:text-lg">Από τη στιγμή που γίνεται η κράτηση μέχρι την αναχώρηση του επισκέπτη, όλο το κατάλυμα λειτουργεί στον αυτόματο πιλότο.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8 relative" data-fx="spotlight" style="--fx-accent:#10B981">
+                <!-- Step 1 -->
+                <div data-fx="hover-tilt" class="bg-cardBg border border-white/10 rounded-3xl p-8 hover:border-emerald-500/40 transition-all relative group">
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-500/15 text-emerald-400 font-display font-extrabold text-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        01
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">Συγχρονισμός Κρατήσεων</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                        Συνδέεται απευθείας με <strong class="text-gray-200">Airbnb, Booking.com, Vrbo</strong> (μέσω iCal ή Channel Manager API) και διαβάζει αυτόματα τις ώρες άφιξης και αναχώρησης.
+                    </p>
+                    <div class="inline-flex items-center gap-2 text-xs font-semibold text-emerald-400 bg-emerald-500/10 px-3 py-1.5 rounded-xl">
+                        <i class="fa-solid fa-rotate"></i> Real-time Calendar Sync
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div data-fx="hover-tilt" class="bg-cardBg border border-white/10 rounded-3xl p-8 hover:border-blue-500/40 transition-all relative group">
+                    <div class="w-12 h-12 rounded-2xl bg-blue-500/15 text-blue-400 font-display font-extrabold text-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        02
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">Αυτόματο PIN & Self Check-in</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                        Η έξυπνη κλειδαριά παράγει μοναδικό 6-ψήφιο κωδικό PIN που <strong class="text-gray-200">ισχύει αυστηρά</strong> από το check-in έως το check-out και αποστέλλεται αυτόματα με SMS / WhatsApp.
+                    </p>
+                    <div class="inline-flex items-center gap-2 text-xs font-semibold text-blue-400 bg-blue-500/10 px-3 py-1.5 rounded-xl">
+                        <i class="fa-solid fa-key"></i> Zero Key Handover
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="bg-cardBg border border-white/10 rounded-3xl p-8 hover:border-emerald-500/40 transition-all relative group">
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-500/15 text-emerald-400 font-display font-extrabold text-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        03
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">Έξυπνο Ρεύμα & Κλιματισμός</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                        Προθερμαίνει το νερό 1 ώρα πριν την άφιξη, κλείνει το A/C αν ανοίξει μπαλκονόπορτα και <strong class="text-gray-200">κόβει τις ενεργοβόρες συσκευές</strong> μόλις φύγει ο επισκέπτης.
+                    </p>
+                    <div class="inline-flex items-center gap-2 text-xs font-semibold text-emerald-400 bg-emerald-500/10 px-3 py-1.5 rounded-xl">
+                        <i class="fa-solid fa-leaf"></i> Smart Energy Cut-Off
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. HARDWARE KIT SHOWCASE (INTERACTIVE TABS) -->
+    <section id="hardware" class="py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <span class="text-blue-400 font-bold text-xs uppercase tracking-widest">Βιομηχανικής Αξιοπιστίας Εξοπλισμός</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-2 mb-4">Το Οικοσύστημα Συσκευών IoT</h2>
+                <p class="text-gray-400 text-base">Επιλέξτε κάθε συσκευή του πακέτου για να δείτε πώς προστατεύει και εξοικονομεί χρήματα στο κατάλυμά σας.</p>
+            </div>
+
+            <!-- Category Tabs -->
+            <div id="hardwareTabs" class="flex flex-wrap justify-center gap-2.5 mb-10">
+                <button data-hw="lock" class="hw-tab active px-5 py-3 rounded-2xl text-sm font-bold transition-all bg-emerald-500 text-black shadow-lg shadow-emerald-500/20">
+                    <i class="fa-solid fa-lock mr-2"></i>Έξυπνη Κλειδαριά
+                </button>
+                <button data-hw="breaker" class="hw-tab px-5 py-3 rounded-2xl text-sm font-semibold transition-all bg-cardBg text-gray-300 hover:bg-cardHover border border-white/10">
+                    <i class="fa-solid fa-bolt mr-2"></i>Ραγοδιακόπτης Πίνακα
+                </button>
+                <button data-hw="ac" class="hw-tab px-5 py-3 rounded-2xl text-sm font-semibold transition-all bg-cardBg text-gray-300 hover:bg-cardHover border border-white/10">
+                    <i class="fa-solid fa-wind mr-2"></i>Έλεγχος A/C & Πόρτας
+                </button>
+                <button data-hw="noise" class="hw-tab px-5 py-3 rounded-2xl text-sm font-semibold transition-all bg-cardBg text-gray-300 hover:bg-cardHover border border-white/10">
+                    <i class="fa-solid fa-volume-high mr-2"></i>Θόρυβος & Κάπνισμα
+                </button>
+                <button data-hw="water" class="hw-tab px-5 py-3 rounded-2xl text-sm font-semibold transition-all bg-cardBg text-gray-300 hover:bg-cardHover border border-white/10">
+                    <i class="fa-solid fa-droplet mr-2"></i>Αισθητήρας Διαρροής
+                </button>
+            </div>
+
+            <!-- Interactive Hardware Display Card -->
+            <div id="hardwareDisplay" class="bg-cardBg border border-white/10 rounded-3xl p-6 sm:p-10 grid lg:grid-cols-12 gap-8 items-center">
+                <!-- Populated dynamically via JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. INTERACTIVE LIVE DEMO / GUEST & ENERGY SIMULATOR -->
+    <section id="simulator" class="py-20 bg-[#141414] border-y border-white/5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <span class="inline-flex items-center gap-2 text-emerald-400 font-bold text-xs uppercase tracking-widest">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> Διαδραστικό Demo
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-2 mb-4">Δοκιμάστε το Σύστημα σε Πραγματικό Χρόνο</h2>
+                <p class="text-gray-400 text-base">Προσομοιώστε μια νέα κράτηση Airbnb ή ανοίξτε την μπαλκονόπορτα για να δείτε πώς αντιδρά αυτόματα ο εξοπλισμός του διαμερίσματος.</p>
+            </div>
+
+            <div class="grid lg:grid-cols-12 gap-8 items-stretch">
+                <!-- Control Panel (Left) -->
+                <div class="lg:col-span-5 bg-cardBg border border-white/10 rounded-3xl p-6 sm:p-8 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-lg font-bold text-white mb-6 flex items-center gap-2">
+                            <i class="fa-solid fa-sliders text-emerald-400"></i> Πίνακας Εντολών Προσομοίωσης
+                        </h3>
+
+                        <!-- Action 1: Simulate Booking -->
+                        <div class="mb-6 p-4 rounded-2xl bg-black/40 border border-white/5">
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">1. Νέα Κράτηση Airbnb</label>
+                            <div class="flex gap-2">
+                                <input id="simGuestName" type="text" value="Elena Papadopoulou" placeholder="Όνομα Επισκέπτη"
+                                    class="w-full bg-cardBg border border-white/15 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-400">
+                                <button id="simBookBtn" class="shrink-0 bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-sm px-4 py-2.5 rounded-xl transition-all">
+                                    <i class="fa-solid fa-calendar-plus mr-1"></i> Κράτηση
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Action 2: Balcony Door Toggle -->
+                        <div class="mb-6 p-4 rounded-2xl bg-black/40 border border-white/5 flex items-center justify-between">
+                            <div>
+                                <div class="text-sm font-bold text-white">2. Μπαλκονόπορτα</div>
+                                <div id="doorSubtext" class="text-xs text-gray-400">Κατάσταση: Κλειστή (A/C Ενεργό)</div>
+                            </div>
+                            <button id="toggleDoorBtn" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-blue-500/20 text-blue-400 border border-blue-500/30 hover:bg-blue-500/30 transition-all">
+                                Άνοιγμα Πόρτας
+                            </button>
+                        </div>
+
+                        <!-- Action 3: Guest Check-Out -->
+                        <div class="p-4 rounded-2xl bg-black/40 border border-white/5 flex items-center justify-between">
+                            <div>
+                                <div class="text-sm font-bold text-white">3. Αναχώρηση (Check-out)</div>
+                                <div class="text-xs text-gray-400">Απενεργοποίηση PIN & Φορτίων</div>
+                            </div>
+                            <button id="simCheckoutBtn" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-red-500/15 text-red-400 border border-red-500/30 hover:bg-red-500/25 transition-all">
+                                Εκτέλεση Check-Out
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Event Log Terminal -->
+                    <div class="mt-6 pt-4 border-t border-white/10">
+                        <div class="text-[11px] uppercase tracking-wider text-gray-500 font-bold mb-2">Live System Logs</div>
+                        <div id="simLogs" class="bg-black/70 rounded-xl p-3 font-mono text-xs text-emerald-400 h-28 overflow-y-auto space-y-1.5 border border-white/5">
+                            <div>[SYSTEM] Έτοιμο. Αναμονή συμβάντων Airbnb...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Visual Apartment Telemetry (Right) -->
+                <div class="lg:col-span-7 bg-cardBg border border-white/10 rounded-3xl p-6 sm:p-8 flex flex-col justify-between glow-blue">
+                    <div class="flex flex-wrap items-center justify-between gap-4 pb-5 border-b border-white/10">
+                        <div>
+                            <span class="text-xs text-gray-400">Τρέχων Επισκέπτης</span>
+                            <h4 id="simActiveGuest" class="text-xl font-bold text-white">Κανένας (Standby Mode)</h4>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-xs text-gray-400">Κατανάλωση Ισχύος</span>
+                            <div id="simWattage" class="text-2xl font-extrabold font-display text-emerald-400">120 W</div>
+                        </div>
+                    </div>
+
+                    <!-- 4 Live Device Cards -->
+                    <div class="grid sm:grid-cols-2 gap-4 my-6">
+                        <!-- Smart Lock State -->
+                        <div class="p-5 rounded-2xl bg-black/50 border border-white/10">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-xs font-semibold text-gray-400">TTLock Smart Lock</span>
+                                <i id="simLockIcon" class="fa-solid fa-lock text-gray-400"></i>
+                            </div>
+                            <div id="simPinDisplay" class="text-2xl font-mono font-extrabold text-white tracking-widest mb-1">------</div>
+                            <div id="simPinValidity" class="text-xs text-gray-500">Δεν υπάρχει ενεργός κωδικός</div>
+                        </div>
+
+                        <!-- A/C & Climate State -->
+                        <div class="p-5 rounded-2xl bg-black/50 border border-white/10">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-xs font-semibold text-gray-400">Κλιματιστικό (IR Control)</span>
+                                <i id="simAcIcon" class="fa-solid fa-snowflake text-gray-400"></i>
+                            </div>
+                            <div id="simAcStatus" class="text-2xl font-extrabold text-gray-400 mb-1">OFF</div>
+                            <div id="simAcReason" class="text-xs text-gray-500">Αναμονή άφιξης επισκέπτη</div>
+                        </div>
+
+                        <!-- Water Heater / Breaker -->
+                        <div class="p-5 rounded-2xl bg-black/50 border border-white/10">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-xs font-semibold text-gray-400">Θερμοσίφωνας (DIN Breaker)</span>
+                                <i id="simBoilerIcon" class="fa-solid fa-fire-flame-curved text-gray-400"></i>
+                            </div>
+                            <div id="simBoilerStatus" class="text-2xl font-extrabold text-gray-400 mb-1">ΚΛΕΙΣΤΟΣ</div>
+                            <div id="simBoilerSub" class="text-xs text-gray-500">Μηδενική σπατάλη ρεύματος</div>
+                        </div>
+
+                        <!-- Cumulative Savings Counter -->
+                        <div class="p-5 rounded-2xl bg-emerald-500/10 border border-emerald-500/25">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-xs font-semibold text-emerald-300">Εξοικονόμηση Ενέργειας</span>
+                                <i class="fa-solid fa-piggy-bank text-emerald-400"></i>
+                            </div>
+                            <div id="simSavedKwh" class="text-2xl font-extrabold text-emerald-400 mb-1">18.4 kWh</div>
+                            <div class="text-xs text-emerald-200/80">Αυτόματες διακοπές σπατάλης</div>
+                        </div>
+                    </div>
+
+                    <div class="bg-blue-500/10 border border-blue-500/20 rounded-2xl p-4 text-xs text-blue-200 flex items-center gap-3">
+                        <i class="fa-solid fa-circle-info text-blue-400 text-base shrink-0"></i>
+                        <span>Όλες οι εντολές καταγράφονται στο Cloud Dashboard σας και ειδοποιούν τον διαχειριστή σε πραγματικό χρόνο.</span>
+                        <a href="dashboard.html" class="ml-auto shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 font-bold text-xs border border-blue-500/30 transition-all">
+                            <span>Άνοιγμα Διαχειριστικού</span>
+                            <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. INTERACTIVE ROI & SAVINGS CALCULATOR -->
+    <section id="roi" class="py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-14">
+                <span class="text-emerald-400 font-bold text-xs uppercase tracking-widest">Υπολογιστής Απόσβεσης (ROI)</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-2 mb-4">Πόσα Χρήματα θα Κερδίσετε τον Χρόνο;</h2>
+                <p class="text-gray-400 text-base">Ρυθμίστε τον αριθμό των καταλυμάτων σας και τον μέσο μηνιαίο λογαριασμό ρεύματος για να δείτε το καθαρό όφελος.</p>
+            </div>
+
+            <div class="bg-cardBg border border-white/10 rounded-3xl p-6 sm:p-10 grid lg:grid-cols-12 gap-10 items-center">
+                <!-- Sliders (Left) -->
+                <div class="lg:col-span-6 space-y-8">
+                    <!-- Slider 1: Properties -->
+                    <div>
+                        <div class="flex justify-between items-center mb-3">
+                            <label for="propSlider" class="font-bold text-white text-base">Αριθμός Καταλυμάτων</label>
+                            <span id="propCountVal" class="px-3.5 py-1 rounded-xl bg-emerald-500/15 text-emerald-400 font-extrabold text-lg font-display">3</span>
+                        </div>
+                        <input id="propSlider" type="range" min="1" max="30" value="3" class="w-full">
+                        <div class="flex justify-between text-xs text-gray-500 mt-2">
+                            <span>1 διαμέρισμα</span>
+                            <span>15 διαμερίσματα</span>
+                            <span>30+ (Fleet)</span>
+                        </div>
+                    </div>
+
+                    <!-- Slider 2: Monthly Electricity Bill -->
+                    <div>
+                        <div class="flex justify-between items-center mb-3">
+                            <label for="billSlider" class="font-bold text-white text-base">Μέσο Μηνιαίο Ρεύμα / Κατάλυμα</label>
+                            <span id="billVal" class="px-3.5 py-1 rounded-xl bg-blue-500/15 text-blue-400 font-extrabold text-lg font-display">160 €</span>
+                        </div>
+                        <input id="billSlider" type="range" min="60" max="450" step="10" value="160" class="w-full">
+                        <div class="flex justify-between text-xs text-gray-500 mt-2">
+                            <span>60 €</span>
+                            <span>250 €</span>
+                            <span>450 €</span>
+                        </div>
+                    </div>
+
+                    <!-- Slider 3: Monthly Check-ins per Property -->
+                    <div>
+                        <div class="flex justify-between items-center mb-3">
+                            <label for="checkinSlider" class="font-bold text-white text-base">Μέσες Αφίξεις / Μήνα ανά Κατάλυμα</label>
+                            <span id="checkinVal" class="px-3.5 py-1 rounded-xl bg-white/10 text-white font-extrabold text-lg font-display">12</span>
+                        </div>
+                        <input id="checkinSlider" type="range" min="4" max="25" value="12" class="w-full">
+                        <div class="flex justify-between text-xs text-gray-500 mt-2">
+                            <span>4 αφίξεις</span>
+                            <span>15 αφίξεις</span>
+                            <span>25 αφίξεις</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results Card (Right) -->
+                <div class="lg:col-span-6 bg-black/50 border border-emerald-500/25 rounded-3xl p-6 sm:p-8 glow-emerald">
+                    <div class="text-xs uppercase tracking-wider text-emerald-400 font-bold mb-2">Εκτιμώμενο Ετήσιο Όφελος</div>
+                    <div id="totalAnnualSavings" class="text-4xl sm:text-5xl font-extrabold text-white font-display mb-6">4.608 € <span class="text-base font-normal text-gray-400">/ έτος</span></div>
+
+                    <div class="grid sm:grid-cols-2 gap-4 mb-6">
+                        <div class="p-4 rounded-2xl bg-cardBg border border-white/5">
+                            <div class="text-xs text-gray-400 mb-1">Εξοικονόμηση Ρεύματος (~35%)</div>
+                            <div id="energySavingsVal" class="text-xl font-bold text-emerald-400">2.016 € / έτος</div>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-cardBg border border-white/5">
+                            <div class="text-xs text-gray-400 mb-1">Κέρδος από Αυτόματα Check-in</div>
+                            <div id="laborSavingsVal" class="text-xl font-bold text-blue-400">2.592 € / έτος</div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between pt-4 border-t border-white/10">
+                        <div>
+                            <div class="text-xs text-gray-400">Χρόνος Απόσβεσης Εξοπλισμού:</div>
+                            <div id="paybackMonthsVal" class="text-lg font-extrabold text-white">~ 5.1 μήνες</div>
+                        </div>
+                        <a href="#contact" class="bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-sm px-5 py-3 rounded-xl transition-all">
+                            Κλειδώστε Προσφορά
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. B2B PRICING PACKAGES -->
+    <section id="pricing" class="py-20 bg-[#141414] border-y border-white/5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-14">
+                <span class="text-blue-400 font-bold text-xs uppercase tracking-widest">Διαφανής Τιμολόγηση B2B</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-2 mb-4">Επιλέξτε το Πακέτο σας</h2>
+                <p class="text-gray-400 text-base">Περιλαμβάνει τον εξοπλισμό IoT, την παραμετροποίηση και πρόσβαση στην πλατφόρμα αυτοματισμού.</p>
+            </div>
+
+            <div class="grid lg:grid-cols-3 gap-8 items-stretch" data-fx="spotlight" style="--fx-accent:#10B981">
+                <!-- Plan 1: Starter -->
+                <div class="bg-cardBg border border-white/10 rounded-3xl p-8 flex flex-col justify-between">
+                    <div>
+                        <div class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-2">Starter Host</div>
+                        <h3 class="text-2xl font-bold text-white mb-2">Αυτόματο Check-in</h3>
+                        <p class="text-sm text-gray-400 mb-6">Ιδανικό για ιδιοκτήτες 1–2 διαμερισμάτων που θέλουν να καταργήσουν την παράδοση κλειδιών.</p>
+
+                        <div class="mb-6 pb-6 border-b border-white/10">
+                            <div class="flex items-baseline gap-2">
+                                <span class="text-4xl font-extrabold text-white font-display">490 €</span>
+                                <span class="text-xs text-gray-400">+ ΦΠΑ (εφάπαξ εξοπλισμός)</span>
+                            </div>
+                            <div class="text-sm text-emerald-400 font-semibold mt-1">+ 12 € / μήνα συνδρομή Cloud</div>
+                        </div>
+
+                        <ul class="space-y-3.5 text-sm text-gray-300 mb-8">
+                            <li class="flex items-start gap-2.5"><i class="fa-solid fa-check text-emerald-400 mt-1"></i> <span>Έξυπνη Κλειδαριά Wi-Fi / PIN / Κάρτα</span></li>
+                            <li class="flex items-start gap-2.5"><i class="fa-solid fa-check text-emerald-400 mt-1"></i> <span>Wi-Fi Bridge Gateway</span></li>
+                            <li class="flex items-start gap-2.5"><i class="fa-solid fa-check text-emerald-400 mt-1"></i> <span>Αυτόματος συγχρονισμός Airbnb / Booking</span></li>
+                            <li class="flex items-start gap-2.5"><i class="fa-solid fa-check text-emerald-400 mt-1"></i> <span>Αυτόματη αποστολή PIN στον επισκέπτη</span></li>
+                        </ul>
+                    </div>
+
+                    <button onclick="selectPlan('Starter Host (490€)')" class="w-full py-3.5 rounded-2xl bg-white/10 hover:bg-white/15 text-white font-bold text-sm transition-all">
+                        Επιλογή Starter
+                    </button>
+                </div>
+
+                <!-- Plan 2: Pro Host (Most Popular) -->
+                <div class="bg-cardBg border-2 border-emerald-500 rounded-3xl p-8 flex flex-col justify-between relative glow-emerald">
+                    <div class="absolute -top-3.5 right-6 bg-emerald-500 text-black text-xs font-extrabold uppercase tracking-wider px-3.5 py-1 rounded-full">
+                        Πιο Δημοφιλές
+                    </div>
+
+                    <div>
+                        <div class="text-sm font-bold text-emerald-400 uppercase tracking-wider mb-2">Pro Energy & Access</div>
+                        <h3 class="text-2xl font-bold text-white mb-2">Πλήρης Αυτοματοποίηση</h3>
+                        <p class="text-sm text-gray-400 mb-6">Μέγιστη εξοικονόμηση ρεύματος, αυτοματοποιημένο check-in και προστασία από διαρροές.</p>
+
+                        <div class="mb-6 pb-6 border-b border-white/10">
+                            <div class="flex items-baseline gap-2">
+                                <span class="text-4xl font-extrabold text-white font-display">650 €</span>
+                                <span class="text-xs text-gray-400">+ ΦΠΑ (πλήρες kit)</span>
+                            </div>
+                            <div class="text-sm text-emerald-400 font-semibold mt-1">+ 15 € / μήνα συνδρομή Cloud</div>
+                        </div>
+
+                        <ul class="space-y-3.5 text-sm text-gray-200 mb-8">
+                            <li class="flex items-start gap-2.5"><i class="fa-solid fa-check text-emerald-400 mt-1"></i> <span><strong>Όλα τα χαρακτηριστικά του Starter</strong></span></li>
+                            <li class="flex items-start gap-2.5"><i class="fa-solid fa-check text-emerald-400 mt-1"></i> <span>Έξυπνος Ραγοδιακόπτης Πίνακα (Θερμοσίφωνας / Γενικό)</span></li>
+                            <li class="flex items-start gap-2.5"><i class="fa-solid fa-check text-emerald-400 mt-1"></i> <span>IR Controller Κλιματιστικού + 2 Αισθητήρες Μπαλκονόπορτας</span></li>
+                            <li class="flex items-start gap-2.5"><i class="fa-solid fa-check text-emerald-400 mt-1"></i> <span>Αισθητήρας Διαρροής Νερού (Μπάνιο/Κουζίνα)</span></li>
+                            <li class="flex items-start gap-2.5"><i class="fa-solid fa-check text-emerald-400 mt-1"></i> <span>Αναλυτικά γραφήματα κατανάλωσης kWh</span></li>
+                        </ul>
+                    </div>
+
+                    <button onclick="selectPlan('Pro Energy & Access (650€)')" class="w-full py-3.5 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-black font-extrabold text-sm transition-all shadow-lg shadow-emerald-500/25">
+                        Επιλογή Pro Kit
+                    </button>
+                </div>
+
+                <!-- Plan 3: Property Manager / Fleet -->
+                <div class="bg-cardBg border border-white/10 rounded-3xl p-8 flex flex-col justify-between">
+                    <div>
+                        <div class="text-sm font-bold text-blue-400 uppercase tracking-wider mb-2">Property Managers & Hotels</div>
+                        <h3 class="text-2xl font-bold text-white mb-2">Fleet & White-Label</h3>
+                        <p class="text-sm text-gray-400 mb-6">Για εταιρείες διαχείρισης ακινήτων, boutique hotels και συγκροτήματα 5+ καταλυμάτων.</p>
+
+                        <div class="mb-6 pb-6 border-b border-white/10">
+                            <div class="flex items-baseline gap-2">
+                                <span class="text-4xl font-extrabold text-white font-display">Custom</span>
+                                <span class="text-xs text-gray-400">Χονδρική τιμή ανά κατάλυμα</span>
+                            </div>
+                            <div class="text-sm text-blue-400 font-semibold mt-1">Έκπτωση έως 30% στον εξοπλισμό</div>
+                        </div>
+
+                        <ul class="space-y-3.5 text-sm text-gray-300 mb-8">
+                            <li class="flex items-start gap-2.5"><i class="fa-solid fa-check text-blue-400 mt-1"></i> <span>Κεντρικό Multi-Property Dashboard</span></li>
+                            <li class="flex items-start gap-2.5"><i class="fa-solid fa-check text-blue-400 mt-1"></i> <span>Αισθητήρες Θορύβου & Καπνού (GDPR Compliant)</span></li>
+                            <li class="flex items-start gap-2.5"><i class="fa-solid fa-check text-blue-400 mt-1"></i> <span>Διασύνδεση API με Channel Managers (Hostaway, Guesty, Syncbnb)</span></li>
+                            <li class="flex items-start gap-2.5"><i class="fa-solid fa-check text-blue-400 mt-1"></i> <span>Δυνατότητα Custom Branding & Προτεραιότητα Τεχνικής Υποστήριξης</span></li>
+                        </ul>
+                    </div>
+
+                    <button onclick="selectPlan('Fleet & Enterprise (5+ Καταλύματα)')" class="w-full py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm transition-all">
+                        Ζητήστε B2B Προσφορά
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. CONTACT / QUOTE REQUEST FORM -->
+    <section id="contact" class="py-20">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-cardBg border border-white/10 rounded-3xl p-8 sm:p-12 shadow-2xl">
+                <div class="text-center mb-8">
+                    <span class="text-emerald-400 font-bold text-xs uppercase tracking-widest">Επικοινωνία & Μελέτη</span>
+                    <h2 class="text-3xl font-extrabold text-white mt-2 mb-3">Ζητήστε Προσφορά για το Κατάλυμά σας</h2>
+                    <p class="text-gray-400 text-sm sm:text-base">Συμπληρώστε τα στοιχεία σας και ένας εξειδικευμένος μηχανικός IoT θα επικοινωνήσει μαζί σας εντός 24 ωρών.</p>
+                </div>
+
+                <form id="quoteForm" class="space-y-5">
+                    <div class="grid sm:grid-cols-2 gap-5">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-300 mb-2">Ονοματεπώνυμο / Εταιρεία *</label>
+                            <input id="quoteFullName" type="text" required placeholder="π.χ. Γιώργος Κωνσταντίνου"
+                                class="w-full bg-black/50 border border-white/15 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-emerald-400">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-300 mb-2">Τηλέφωνο Επικοινωνίας *</label>
+                            <input id="quotePhone" type="tel" required placeholder="π.χ. 69XXXXXXXX"
+                                class="w-full bg-black/50 border border-white/15 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-emerald-400">
+                        </div>
+                    </div>
+
+                    <div class="grid sm:grid-cols-2 gap-5">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-300 mb-2">Email *</label>
+                            <input id="quoteEmail" type="email" required placeholder="name@company.gr"
+                                class="w-full bg-black/50 border border-white/15 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-emerald-400">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-300 mb-2">Ενδιαφέρον Πακέτο</label>
+                            <select id="selectedPackageInput" class="w-full bg-black/50 border border-white/15 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-emerald-400">
+                                <option value="Pro Energy & Access (650€)">Pro Energy & Access (650€)</option>
+                                <option value="Starter Host (490€)">Starter Host (490€)</option>
+                                <option value="Fleet & Enterprise (5+ Καταλύματα)">Fleet & Enterprise (5+ Καταλύματα)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-300 mb-2">Περιοχή & Σχόλια (π.χ. Πόσα διαμερίσματα, τύπος πόρτας)</label>
+                        <textarea id="quoteNotes" rows="3" placeholder="π.χ. Έχω 4 διαμερίσματα στο κέντρο της Αθήνας με πόρτες ασφαλείας..." class="w-full bg-black/50 border border-white/15 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-emerald-400"></textarea>
+                    </div>
+
+                    <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-400 text-black font-extrabold text-base py-4 rounded-2xl transition-all shadow-xl shadow-emerald-500/20">
+                        Αποστολή Αιτήματος Προσφοράς
+                    </button>
+                </form>
+
+                <!-- Custom Confirmation Banner (No alert()) -->
+                <div id="formSuccessBanner" class="hidden mt-6 p-5 rounded-2xl bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 text-sm flex items-center gap-3">
+                    <i class="fa-solid fa-circle-check text-emerald-400 text-2xl shrink-0"></i>
+                    <div>
+                        <div class="font-bold text-white text-base">Το αίτημά σας καταχωρήθηκε επιτυχώς!</div>
+                        <div>Η ομάδα της <span class="brand-display font-semibold">SmartStay Pro</span> θα επικοινωνήσει σύντομα μαζί σας.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-black border-t border-white/10 py-12 text-sm text-gray-400">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-emerald-500 text-black font-bold flex items-center justify-center">
+                    <i class="fa-solid fa-key text-sm"></i>
+                </div>
+                <span class="brand-display font-bold text-white text-lg">SmartStay Pro</span>
+            </div>
+            <div class="text-xs text-gray-500 text-center">
+                &copy; 2026 <span class="brand-display">SmartStay Pro</span> IoT Solutions. Όλα τα δικαιώματα διατηρούνται.
+            </div>
+            <div class="flex flex-wrap items-center gap-5 text-gray-400">
+                <a href="dashboard.html" class="text-emerald-400 hover:text-emerald-300 font-bold flex items-center gap-1.5"><i class="fa-solid fa-gauge-high"></i><span>SaaS Διαχειριστικό</span></a>
+                <a href="#how-it-works" class="hover:text-white">Λύσεις</a>
+                <a href="#hardware" class="hover:text-white">Hardware</a>
+                <a href="#pricing" class="hover:text-white">Τιμές</a>
+                <a href="#contact" class="hover:text-white">Επικοινωνία</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // 1. Live White-Label Rebranding Input
+        const brandInput = document.getElementById('brandNameInput');
+        const brandDisplays = document.querySelectorAll('.brand-display');
+        brandInput.addEventListener('input', (e) => {
+            const val = e.target.value.trim() || 'SmartStay Pro';
+            brandDisplays.forEach(el => el.textContent = val);
+            document.title = `${val} | Ολοκληρωμένη Αυτοματοποίηση Airbnb`;
+        });
+
+        // 2. Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // 3. Hardware Interactive Tabs Data & Logic
+        const hardwareData = {
+            lock: {
+                badge: 'TTLock OEM Series • IP65',
+                title: 'Έξυπνη Κλειδαριά Wi-Fi / PIN / RFID',
+                desc: 'Συμβατή με θωρακισμένες πόρτες ασφαλείας, ξύλινες και αλουμινίου. Παράγει κωδικούς περιορισμένης χρονικής ισχύος (Time-based PIN) ακόμα και χωρίς internet στην κλειδαριά, ενώ με το Wi-Fi Gateway σας ειδοποιεί live για κάθε άνοιγμα.',
+                specs: ['Άνοιγμα με PIN, Κάρτα RFID, Mobile App & Μηχανικό Κλειδί έκτακτης ανάγκης', 'Αυτονομία μπαταρίας 10–12 μηνών με ειδοποίηση χαμηλής στάθμης', 'Αυτόματο κλείδωμα μόλις κλείσει η πόρτα'],
+                icon: 'fa-lock',
+                color: 'emerald'
+            },
+            breaker: {
+                badge: 'DIN-Rail Smart Metering • 63A',
+                title: 'Έξυπνος Ραγοδιακόπτης Ηλεκτρικού Πίνακα',
+                desc: 'Τοποθετείται στον ηλεκτρολογικό πίνακα στη γραμμή του θερμοσίφωνα ή των κλιματιστικών. Μετράει την κατανάλωση ενέργειας (kWh) σε πραγματικό χρόνο και διακόπτει αυτόματα το ρεύμα μόλις ολοκληρωθεί το check-out.',
+                specs: ['Ακριβής μέτρηση Volt, Ampere, Watt & συνολικών kWh', 'Προθέρμανση θερμοσίφωνα 45 λεπτά πριν την άφιξη του επισκέπτη', 'Προστασία υπέρτασης και υπερφόρτωσης'],
+                icon: 'fa-bolt',
+                color: 'blue'
+            },
+            ac: {
+                badge: 'IR Blaster + Zigbee Door Sensors',
+                title: 'Έλεγχος Κλιματιστικού & Αισθητήρες Μπαλκονόπορτας',
+                desc: 'Το μεγαλύτερο κόστος στα ελληνικά Airbnb είναι τα κλιματιστικά που μένουν ανοιχτά με ανοιχτές μπαλκονόπορτες. Μόλις ανοίξει το παράθυρο για πάνω από 60 δευτερόλεπτα, το σύστημα σβήνει αυτόματα το A/C.',
+                specs: ['Συμβατό με όλα τα κλιματιστικά (Daikin, Mitsubishi, Inventor, Toyotomi κ.ά.)', 'Επιβολή ορίων θερμοκρασίας (π.χ. ελάχιστο 21°C το καλοκαίρι)', 'Ασύρματοι μαγνητικοί αισθητήρες διακριτικού μεγέθους'],
+                icon: 'fa-wind',
+                color: 'emerald'
+            },
+            noise: {
+                badge: 'Privacy-First • 100% GDPR Compliant',
+                title: 'Αισθητήρας Θορύβου (dB) & Καπνού',
+                desc: 'Αποφύγετε πρόστιμα και παράπονα γειτόνων από πάρτι ή κάπνισμα μέσα στο διαμέρισμα. Μετράει αποκλειστικά τα επίπεδα ντεσιμπέλ και σωματιδίων καπνού χωρίς μικρόφωνο καταγραφής ή κάμερα.',
+                specs: ['Άμεση ειδοποίηση στο κινητό αν ο θόρυβος ξεπεράσει τα 75 dB για 5 λεπτά', 'Ανίχνευση καπνού τσιγάρου & ατμίσματος', 'Απόλυτος σεβασμός στην ιδιωτικότητα των επισκεπτών'],
+                icon: 'fa-volume-high',
+                color: 'blue'
+            },
+            water: {
+                badge: '24/7 Flood Protection',
+                title: 'Αισθητήρας Διαρροής Νερού',
+                desc: 'Τοποθετείται κάτω από τον νεροχύτη, το πλυντήριο ή τον θερμοσίφωνα. Σε περίπτωση διαρροής, στέλνει άμεσο συναγερμό προλαμβάνοντας ζημιές χιλιάδων ευρώ σε ξύλινα πατώματα και γειτονικά διαμερίσματα.',
+                specs: ['Άμεση ανίχνευση σε 1 δευτερόλεπτο από την επαφή με νερό', 'Αυτονομία μπαταρίας έως 2 έτη', 'Δυνατότητα σύνδεσης με ηλεκτροβάνα κεντρικής παροχής'],
+                icon: 'fa-droplet',
+                color: 'emerald'
+            }
+        };
+
+        const hwTabs = document.querySelectorAll('.hw-tab');
+        const hwDisplay = document.getElementById('hardwareDisplay');
+
+        function renderHardware(key) {
+            const item = hardwareData[key];
+            const accentText = item.color === 'emerald' ? 'text-emerald-400' : 'text-blue-400';
+            const accentBg = item.color === 'emerald' ? 'bg-emerald-500/15' : 'bg-blue-500/15';
+
+            hwDisplay.innerHTML = `
+                <div class="lg:col-span-5 flex flex-col items-center justify-center p-8 rounded-3xl bg-black/50 border border-white/10 text-center">
+                    <div class="w-24 h-24 rounded-3xl ${accentBg} ${accentText} flex items-center justify-center text-4xl mb-5 shadow-lg">
+                        <i class="fa-solid ${item.icon}"></i>
+                    </div>
+                    <span class="px-3 py-1 rounded-full ${accentBg} ${accentText} text-xs font-bold mb-2">${item.badge}</span>
+                    <div class="text-xs text-gray-500 mt-1">White-Label Ready • CE / RED Certified</div>
+                </div>
+                <div class="lg:col-span-7">
+                    <h3 class="text-2xl sm:text-3xl font-extrabold text-white mb-4">${item.title}</h3>
+                    <p class="text-gray-300 text-base leading-relaxed mb-6">${item.desc}</p>
+                    <ul class="space-y-3">
+                        ${item.specs.map(s => `
+                            <li class="flex items-start gap-3 text-sm text-gray-300">
+                                <i class="fa-solid fa-circle-check ${accentText} mt-1"></i>
+                                <span>${s}</span>
+                            </li>
+                        `).join('')}
+                    </ul>
+                </div>
+            `;
+        }
+
+        hwTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                hwTabs.forEach(t => {
+                    t.classList.remove('bg-emerald-500', 'text-black', 'font-bold', 'shadow-lg', 'shadow-emerald-500/20');
+                    t.classList.add('bg-cardBg', 'text-gray-300', 'font-semibold', 'border', 'border-white/10');
+                });
+                tab.classList.remove('bg-cardBg', 'text-gray-300', 'font-semibold', 'border', 'border-white/10');
+                tab.classList.add('bg-emerald-500', 'text-black', 'font-bold', 'shadow-lg', 'shadow-emerald-500/20');
+                renderHardware(tab.dataset.hw);
+            });
+        });
+        renderHardware('lock');
+
+        // 4. Interactive Live Demo Simulator
+        let isBooked = false;
+        let isDoorOpen = false;
+        let savedKwh = 18.4;
+
+        const simGuestName = document.getElementById('simGuestName');
+        const simBookBtn = document.getElementById('simBookBtn');
+        const toggleDoorBtn = document.getElementById('toggleDoorBtn');
+        const simCheckoutBtn = document.getElementById('simCheckoutBtn');
+        const simLogs = document.getElementById('simLogs');
+
+        const simActiveGuest = document.getElementById('simActiveGuest');
+        const simWattage = document.getElementById('simWattage');
+        const simPinDisplay = document.getElementById('simPinDisplay');
+        const simPinValidity = document.getElementById('simPinValidity');
+        const simLockIcon = document.getElementById('simLockIcon');
+        const simAcStatus = document.getElementById('simAcStatus');
+        const simAcReason = document.getElementById('simAcReason');
+        const simAcIcon = document.getElementById('simAcIcon');
+        const simBoilerStatus = document.getElementById('simBoilerStatus');
+        const simBoilerSub = document.getElementById('simBoilerSub');
+        const simBoilerIcon = document.getElementById('simBoilerIcon');
+        const simSavedKwh = document.getElementById('simSavedKwh');
+        const doorSubtext = document.getElementById('doorSubtext');
+
+        function addLog(msg) {
+            const now = new Date().toLocaleTimeString('el-GR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            const div = document.createElement('div');
+            div.textContent = `[${now}] ${msg}`;
+            simLogs.prepend(div);
+        }
+
+        function updateSimulatorUI() {
+            if (!isBooked) {
+                simActiveGuest.textContent = 'Κανένας (Standby Mode)';
+                simPinDisplay.textContent = '------';
+                simPinDisplay.classList.replace('text-emerald-400', 'text-white');
+                simPinValidity.textContent = 'Δεν υπάρχει ενεργός κωδικός';
+                simLockIcon.className = 'fa-solid fa-lock text-gray-400';
+
+                simAcStatus.textContent = 'OFF';
+                simAcStatus.className = 'text-2xl font-extrabold text-gray-400 mb-1';
+                simAcReason.textContent = 'Αναμονή άφιξης επισκέπτη';
+                simAcIcon.className = 'fa-solid fa-snowflake text-gray-400';
+
+                simBoilerStatus.textContent = 'ΚΛΕΙΣΤΟΣ';
+                simBoilerStatus.className = 'text-2xl font-extrabold text-gray-400 mb-1';
+                simBoilerSub.textContent = 'Μηδενική σπατάλη ρεύματος';
+                simBoilerIcon.className = 'fa-solid fa-fire-flame-curved text-gray-400';
+
+                simWattage.textContent = '120 W';
+                return;
+            }
+
+            // Active Booking
+            simBoilerStatus.textContent = 'ΕΝΕΡΓΟΣ';
+            simBoilerStatus.className = 'text-2xl font-extrabold text-emerald-400 mb-1';
+            simBoilerSub.textContent = 'Ζεστό νερό έτοιμο για τον επισκέπτη';
+            simBoilerIcon.className = 'fa-solid fa-fire-flame-curved text-emerald-400';
+
+            if (isDoorOpen) {
+                simAcStatus.textContent = 'AUTO-OFF';
+                simAcStatus.className = 'text-2xl font-extrabold text-amber-400 mb-1';
+                simAcReason.textContent = 'Μπαλκονόπορτα ανοιχτή! Εξοικονόμηση ενεργή';
+                simAcIcon.className = 'fa-solid fa-door-open text-amber-400';
+                simWattage.textContent = '480 W';
+            } else {
+                simAcStatus.textContent = 'ON • 23°C';
+                simAcStatus.className = 'text-2xl font-extrabold text-blue-400 mb-1';
+                simAcReason.textContent = 'Μπαλκονόπορτα κλειστή • Κανονική λειτουργία';
+                simAcIcon.className = 'fa-solid fa-snowflake text-blue-400 animate-spin';
+                simWattage.textContent = '1.850 W';
+            }
+        }
+
+        simBookBtn.addEventListener('click', () => {
+            const guest = simGuestName.value.trim() || 'Guest User';
+            const randomPin = Math.floor(100000 + Math.random() * 900000);
+            isBooked = true;
+            simActiveGuest.textContent = guest;
+            simPinDisplay.textContent = `#${randomPin}`;
+            simPinDisplay.classList.replace('text-white', 'text-emerald-400');
+            simPinValidity.textContent = 'Ενεργό PIN • Στάλθηκε σε WhatsApp & SMS';
+            simLockIcon.className = 'fa-solid fa-unlock-keyhole text-emerald-400';
+            addLog(`Νέα κράτηση Airbnb για "${guest}". Δημιουργήθηκε PIN #${randomPin}.`);
+            addLog(`Ραγοδιακόπτης: Ενεργοποίηση θερμοσίφωνα & A/C.`);
+            updateSimulatorUI();
+        });
+
+        toggleDoorBtn.addEventListener('click', () => {
+            isDoorOpen = !isDoorOpen;
+            if (isDoorOpen) {
+                toggleDoorBtn.textContent = 'Κλείσιμο Πόρτας';
+                doorSubtext.textContent = 'Κατάσταση: Ανοιχτή (A/C Διεκόπη)';
+                if (isBooked) {
+                    savedKwh += 1.6;
+                    simSavedKwh.textContent = `${savedKwh.toFixed(1)} kWh`;
+                    addLog(`Αισθητήρας Πόρτας: ΑΝΟΙΧΤΗ -> Αυτόματο σβήσιμο A/C (+1.6 kWh).`);
+                } else {
+                    addLog(`Αισθητήρας Πόρτας: ΑΝΟΙΧΤΗ.`);
+                }
+            } else {
+                toggleDoorBtn.textContent = 'Άνοιγμα Πόρτας';
+                doorSubtext.textContent = 'Κατάσταση: Κλειστή';
+                addLog(`Αισθητήρας Πόρτας: ΚΛΕΙΣΤΗ.`);
+            }
+            updateSimulatorUI();
+        });
+
+        simCheckoutBtn.addEventListener('click', () => {
+            if (!isBooked) {
+                addLog(`Δεν υπάρχει ενεργή κράτηση για check-out.`);
+                return;
+            }
+            isBooked = false;
+            savedKwh += 4.2;
+            simSavedKwh.textContent = `${savedKwh.toFixed(1)} kWh`;
+            addLog(`Check-out ολοκληρώθηκε: Το PIN διαγράφηκε & το ρεύμα κόπηκε (+4.2 kWh).`);
+            updateSimulatorUI();
+        });
+
+        // 5. Interactive ROI Calculator
+        const propSlider = document.getElementById('propSlider');
+        const billSlider = document.getElementById('billSlider');
+        const checkinSlider = document.getElementById('checkinSlider');
+
+        const propCountVal = document.getElementById('propCountVal');
+        const billVal = document.getElementById('billVal');
+        const checkinVal = document.getElementById('checkinVal');
+
+        const totalAnnualSavings = document.getElementById('totalAnnualSavings');
+        const energySavingsVal = document.getElementById('energySavingsVal');
+        const laborSavingsVal = document.getElementById('laborSavingsVal');
+        const paybackMonthsVal = document.getElementById('paybackMonthsVal');
+
+        function calculateROI() {
+            const props = parseInt(propSlider.value, 10);
+            const monthlyBill = parseInt(billSlider.value, 10);
+            const monthlyCheckins = parseInt(checkinSlider.value, 10);
+
+            propCountVal.textContent = props;
+            billVal.textContent = `${monthlyBill} €`;
+            checkinVal.textContent = monthlyCheckins;
+
+            // 35% annual electricity savings
+            const annualEnergySaved = Math.round(props * monthlyBill * 12 * 0.35);
+            // ~6€ saved per self check-in (transport + staff time)
+            const annualLaborSaved = Math.round(props * monthlyCheckins * 12 * 6);
+            const totalSaved = annualEnergySaved + annualLaborSaved;
+
+            // Hardware cost per unit (~650€, discounted for fleets)
+            const unitCost = props >= 5 ? 520 : 650;
+            const totalHardwareInvestment = props * unitCost;
+            const monthlyTotalSaved = totalSaved / 12;
+            const paybackMonths = Math.max(1.5, (totalHardwareInvestment / monthlyTotalSaved)).toFixed(1);
+
+            energySavingsVal.textContent = `${annualEnergySaved.toLocaleString('el-GR')} € / έτος`;
+            laborSavingsVal.textContent = `${annualLaborSaved.toLocaleString('el-GR')} € / έτος`;
+            totalAnnualSavings.innerHTML = `${totalSaved.toLocaleString('el-GR')} € <span class="text-base font-normal text-gray-400">/ έτος</span>`;
+            paybackMonthsVal.textContent = `~ ${paybackMonths} μήνες`;
+        }
+
+        propSlider.addEventListener('input', calculateROI);
+        billSlider.addEventListener('input', calculateROI);
+        checkinSlider.addEventListener('input', calculateROI);
+        calculateROI();
+
+        // 6. Select Plan Helper & Form Submission
+        function selectPlan(planName) {
+            const selectEl = document.getElementById('selectedPackageInput');
+            selectEl.value = planName;
+            document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        const quoteForm = document.getElementById('quoteForm');
+        const formSuccessBanner = document.getElementById('formSuccessBanner');
+
+        quoteForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const submitBtn = quoteForm.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner animate-spin mr-2"></i>Αποθήκευση στη Βάση SQL...';
+
+            const payload = {
+                fullName: (document.getElementById('quoteFullName')?.value || '').trim(),
+                phone: (document.getElementById('quotePhone')?.value || '').trim(),
+                email: (document.getElementById('quoteEmail')?.value || '').trim(),
+                packageName: document.getElementById('selectedPackageInput')?.value,
+                notes: (document.getElementById('quoteNotes')?.value || '').trim()
+            };
+
+            try {
+                const res = await fetch('/api/quotes', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                if (data.success) {
+                    formSuccessBanner.classList.remove('hidden');
+                    quoteForm.reset();
+                } else {
+                    alert(data.error || 'Σφάλμα κατά την καταχώρηση.');
+                }
+            } catch (err) {
+                // Fallback for file:// or offline mode
+                formSuccessBanner.classList.remove('hidden');
+                quoteForm.reset();
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+            }
+        });
+
+        // Optional Live Stats Fetch from SQL Server
+        async function fetchLiveStats() {
+            try {
+                const res = await fetch('/api/stats');
+                if (res.ok) {
+                    const stats = await res.json();
+                    console.log('Connected to SmartStay SQL Database:', stats);
+                }
+            } catch (e) {}
+        }
+        fetchLiveStats();
+    </script>
+    <!-- 10K Websites Engine Scripts -->
+    <script src="engine/fx.js"></script>
+    <script src="engine/scene.js"></script>
+</body>
+</html>

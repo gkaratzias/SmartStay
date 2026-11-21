@@ -1,0 +1,26 @@
+{
+  "name": "smartstay-pro",
+  "version": "1.0.0",
+  "description": "SmartStay Pro - All-in-One Smart Hospitality & IoT Automation Platform with SQL Database",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "keywords": [
+    "iot",
+    "airbnb",
+    "hospitality",
+    "sql",
+    "smart-lock",
+    "ttlock",
+    "automation"
+  ],
+  "author": "SmartStay Pro",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.3.0"
+  }
+}
